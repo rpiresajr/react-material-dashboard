@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
+import { Button , 
+        FormLabel, 
+        Typography,
+      Grid
+} from '@material-ui/core';
 
 import { SearchInput } from 'components';
 
@@ -28,8 +32,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
+const ReembolsoToolbar = props => {
   const { className, ...rest } = props;
+
+  const submit = (event) => {
+      console.log("botao add reembolso");
+  }
 
   const classes = useStyles();
 
@@ -43,18 +51,15 @@ const UsersToolbar = props => {
 
 
       </div>
-      <div className={classes.row}>
-        <SearchInput
-          className={classes.searchInput}
-          placeholder="Search user"
-        />
+      <div className={classes.title}>
+      <Typography variant="subtitle1">Despesas</Typography>
       </div>
     </div>
   );
 };
 
-UsersToolbar.propTypes = {
+ReembolsoToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersToolbar;
+export default ReembolsoToolbar;

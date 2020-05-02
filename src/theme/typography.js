@@ -45,7 +45,7 @@ export default {
   },
   subtitle1: {
     color: palette.text.primary,
-    fontSize: '16px',
+    fontSize: '48px',
     letterSpacing: '-0.05px',
     lineHeight: '25px'
   },

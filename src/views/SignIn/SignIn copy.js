@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
-
-
-import axios from 'axios';
 import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
@@ -17,7 +14,6 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
-import Axios from 'axios';
 
 const schema = {
   email: {
@@ -27,7 +23,7 @@ const schema = {
       maximum: 64
     }
   },
-  senha: {
+  password: {
     presence: { allowEmpty: false, message: 'é requirido' },
     length: {
       maximum: 128
@@ -141,9 +137,6 @@ const SignIn = props => {
     errors: {}
   });
 
-  const [token, setToken] = useState('');
-  const URL_SITE = "http://localhost:8181/login"
-
   useEffect(() => {
     const errors = validate(formState.values, schema);
 
@@ -154,6 +147,9 @@ const SignIn = props => {
     }));
   }, [formState.values]);
 
+  const handleBack = () => {
+    history.goBack();
+  };
 
   const handleChange = event => {
     event.persist();
@@ -172,32 +168,11 @@ const SignIn = props => {
         [event.target.name]: true
       }
     }));
-
   };
 
   const handleSignIn = event => {
     event.preventDefault();
-
-
-    console.log(formState.values);
-
-
-    axios.post(URL_SITE,formState.values,{
-      headers: {'content-type': 'application/json', 
-                'exposedHeaders': 'X-Authorization', 
-                'Access-Control-Expose-Headers': 'X-Authorization',
-                'Access-Control-Allow-Origin': '*'  }
-    }).then( response => {
-      console.log(response);
-      console.log(response.headers);
-      
-      console.log(response.headers['Authorization']);
-    }
-    ).catch(error => {
-        console.log(error);
-    })
-
-    //history.push('/');
+    history.push('/');
   };
 
   const hasError = field =>
@@ -259,6 +234,51 @@ const SignIn = props => {
                 >
                   Login
                 </Typography>
+                
+                
+                <Typography
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Sign in with social media
+                </Typography>
+                <Grid
+                  className={classes.socialButtons}
+                  container
+                  spacing={2}
+                >
+                  <Grid item>
+                    <Button
+                      color="primary"
+                      onClick={handleSignIn}
+                      size="large"
+                      variant="contained"
+                    >
+                      <FacebookIcon className={classes.socialIcon} />
+                      Login com Facebook
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={handleSignIn}
+                      size="large"
+                      variant="contained"
+                    >
+                      <GoogleIcon className={classes.socialIcon} />
+                      Login with Google
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Typography
+                  align="center"
+                  className={classes.sugestion}
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  or login with email address
+                </Typography>
+                
+
                 <TextField
                   className={classes.textField}
                   error={hasError('email')}
@@ -266,7 +286,7 @@ const SignIn = props => {
                   helperText={
                     hasError('email') ? formState.errors.email[0] : null
                   }
-                  label="Email"
+                  label="Email address"
                   name="email"
                   onChange={handleChange}
                   type="text"
@@ -275,16 +295,16 @@ const SignIn = props => {
                 />
                 <TextField
                   className={classes.textField}
-                  error={hasError('senha')}
+                  error={hasError('password')}
                   fullWidth
                   helperText={
-                    hasError('senha') ? formState.errors.senha[0] : null
+                    hasError('password') ? formState.errors.password[0] : null
                   }
-                  label="Senha"
-                  name="senha"
+                  label="Password"
+                  name="password"
                   onChange={handleChange}
                   type="password"
-                  value={formState.values.senha || ''}
+                  value={formState.values.password || ''}
                   variant="outlined"
                 />
                 <Button
@@ -296,19 +316,19 @@ const SignIn = props => {
                   type="submit"
                   variant="contained"
                 >
-                  Acessar
+                  Sign in now
                 </Button>
                 <Typography
                   color="textSecondary"
                   variant="body1"
                 >
-                  Ainda não tem uma conta?{' '}
+                  Don't have an account?{' '}
                   <Link
                     component={RouterLink}
                     to="/sign-up"
                     variant="h6"
                   >
-                    Cadastre-se
+                    Sign up
                   </Link>
                 </Typography>
               </form>

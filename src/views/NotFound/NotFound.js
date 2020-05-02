@@ -35,16 +35,16 @@ const NotFound = () => {
         >
           <div className={classes.content}>
             <Typography variant="h1">
-              404: The page you are looking for isn’t here
+              404: Página não encontrada
             </Typography>
             <Typography variant="subtitle2">
-              You either tried some shady route or you came here by mistake.
-              Whichever it is, try using the navigation
+              Algo foi digitado errado.
+              Poderia validar e tentar novamente
             </Typography>
             <img
               alt="Under development"
               className={classes.image}
-              src="/images/undraw_page_not_found_su7k.svg"
+              src="/images/erro-404.png"
             />
           </div>
         </Grid>

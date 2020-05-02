@@ -24,6 +24,7 @@ validate.validators = {
 };
 
 export default class App extends Component {
+  
   render() {
     return (
       <ThemeProvider theme={theme}>

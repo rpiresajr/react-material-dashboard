@@ -17,6 +17,7 @@ const UserList = () => {
   const classes = useStyles();
 
   const [users] = useState(mockData);
+  //const [users] = useState([]);
 
   return (
     <div className={classes.root}>

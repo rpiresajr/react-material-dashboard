@@ -14,7 +14,8 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
-  NotFound as NotFoundView
+  NotFound as NotFoundView,
+  ReembolsoList as ReembolsoListView
 } from './views';
 
 const Routes = () => {
@@ -30,6 +31,18 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/dashboard"
+      />
+      <RouteWithLayout
+        component={ReembolsoListView}
+        exact
+        layout={MainLayout}
+        path="/despesas"
+      />
+      <RouteWithLayout
+        component={SignInView}
+        exact
+        layout={MinimalLayout}
+        path="/sign-in"
       />
       <RouteWithLayout
         component={UserListView}
@@ -72,12 +85,6 @@ const Routes = () => {
         exact
         layout={MinimalLayout}
         path="/sign-up"
-      />
-      <RouteWithLayout
-        component={SignInView}
-        exact
-        layout={MinimalLayout}
-        path="/sign-in"
       />
       <RouteWithLayout
         component={NotFoundView}
