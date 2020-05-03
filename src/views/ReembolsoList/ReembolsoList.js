@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const clickButtonCell = (id) => {
+const clickbuttoncell = (id) => {
   console.log(`"Item a ser alterado:"${id}`);
 }
 
@@ -27,7 +27,7 @@ const ReembelsoList = () => {
     <div className={classes.root}>
       <ReembolsoToolbar />
       <div className={classes.content}>
-        <ReembolsoTable clickButtonCell={clickButtonCell} reembolsos={reembolsos} />
+        <ReembolsoTable clickButtonCell={clickbuttoncell} reembolsos={reembolsos} />
       </div>
     </div>
   );
