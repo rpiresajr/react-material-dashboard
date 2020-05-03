@@ -175,6 +175,8 @@ const SignIn = props => {
 
   };
 
+
+
   const handleSignIn = event => {
     event.preventDefault();
 
@@ -182,20 +184,29 @@ const SignIn = props => {
     console.log(formState.values);
 
 
-    axios.post(URL_SITE,formState.values,{
-      headers: {'content-type': 'application/json', 
-                'exposedHeaders': 'X-Authorization', 
-                'Access-Control-Expose-Headers': 'X-Authorization',
-                'Access-Control-Allow-Origin': '*'  }
-    }).then( response => {
-      console.log(response);
-      console.log(response.headers);
+
+
+    //'Access-Control-Expose-Headers': 'X-Authorization'
+    axios.post(URL_SITE,formState.values,{ headers: {'Access-Control-Expose-Headers': 'X-Authorization'} })
+    .then( function(response) {
+      if (response.status >= 200){
+        console.log("Autenticado com sucesso")
+        history.push("/dashboard")
+      }else{
+        console.log("Falha ao autenticar")
+      }
       
-      console.log(response.headers['Authorization']);
-    }
-    ).catch(error => {
-        console.log(error);
     })
+    .catch( error => {
+      const err = (`"Erro --> "${error}`)
+        
+      if (err.includes("403") || err.includes("401")){
+        console.log("Usu'ario/Senha invalidos");
+      }else{
+        console.log("Falha ao conectar com o servidor")
+      }
+        
+    });
 
     //history.push('/');
   };
