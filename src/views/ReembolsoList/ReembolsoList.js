@@ -5,7 +5,7 @@ import { ReembolsoToolbar, ReembolsoTable } from './components';
 //import mockData from '../Mocks/dataReembolso';
 
 import {axiosInstance} from '../../common/ApiService'
- 
+import Routes from '../../Routes' 
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,7 +22,6 @@ const clickButtonCell = (id) => {
 
 const ReembelsoList = () => {
   const classes = useStyles();
-  const { history } = props;
 
   const coletareembolsos = () => {
 
@@ -34,7 +33,7 @@ const ReembelsoList = () => {
     .catch( error => {
         console.log("falha ao retornar as despesas")
         console.log(error)
-        history.push("/sign-in")
+        
       });
   
     }
