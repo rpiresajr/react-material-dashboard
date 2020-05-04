@@ -3,7 +3,9 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 
-import {baseURL} from '../../common/ApiService'
+import {baseURL} from '../../common/ApiService';
+
+import LocalStorageService from "../../common/LocalStorageService";
 
 import Snackbar from '@material-ui/core/Snackbar';
 import CustomizedSnackbars from '../../components/CustomizedSnackbars'
@@ -142,6 +144,8 @@ const SignIn = props => {
 
   const classes = useStyles();
 
+  const localStorageService = LocalStorageService.getService();
+
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -152,7 +156,9 @@ const SignIn = props => {
   useEffect(() => {
     const errors = validate(formState.values, schema);
 
-    localStorage.setItem("token","");
+    //localStorage.setItem("token","");
+
+    localStorageService.clearToken();
 
     setFormState(formState => ({
       ...formState,
@@ -218,10 +224,8 @@ const SignIn = props => {
       //console.log(response);
       if (response.status >= 200){ 
         const token = response.data;
-
-        const token2 ="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZWxpbnRvQGdtYWlsLmNvbSIsImlhdCI6MTU4ODYxMTEyMSwiaXNzIjoiUk9MRV9VU1VBUklPIiwiZXhwIjoxNTg5NDc1MTIxfQ.8WAF4JmmGJLwfqPmrPAe5XAc74wdAaYf8wVlClI1WYuW_SVDVUQGN6UzAgRhT04pZ8wwRJIBLcp-ZP80tnB6oA";
-
-        localStorage.setItem("token",token2.trim())
+        localStorageService.setToken(token);
+        //localStorage.setItem("token",token.trim())
         history.push("/dashboard")
       }else{
         setAlertaMensagem("Falha ao autenticar")

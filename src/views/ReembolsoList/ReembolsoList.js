@@ -22,45 +22,25 @@ const clickButtonCell = (id) => {
 
 const ReembelsoList = () => {
   const classes = useStyles();
-
-
+  const { history } = props;
 
   const coletareembolsos = () => {
 
     axiosInstance.get('/api/despesas/v1')
     .then( response => {
-        console.log( response.data);
+        //console.log( response.data);
+        setReembolsos(response.data);
       })
     .catch( error => {
         console.log("falha ao retornar as despesas")
         console.log(error)
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log("1")
-          console.log(error.response.data)
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log("2");
-          console.log(error.request)
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("3")
-          console.log("Error", error.message)
-        }
-        console.log("4")
-        console.log(error.config)
-
-
+        history.push("/sign-in")
       });
   
     }
 
-  coletareembolsos(); 
   //const [uses] = useState(mockData);
-  const [reembolsos] = useState([]);
+  const [reembolsos, setReembolsos] = useState([]);
 
 
   return (
