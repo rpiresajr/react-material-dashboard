@@ -2,13 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { ReembolsoToolbar, ReembolsoTable } from './components';
-import mockData from '../Mocks/dataReembolso';
+//import mockData from '../Mocks/dataReembolso';
 
 import {axiosInstance} from '../../common/ApiService'
-
-
-
-
  
 
 const useStyles = makeStyles(theme => ({
@@ -28,8 +24,10 @@ const ReembelsoList = () => {
   const classes = useStyles();
 
 
+
   const coletareembolsos = () => {
-    axiosInstance.get( '/api/despesas/v1')
+
+    axiosInstance.get('/api/despesas/v1')
     .then( response => {
         console.log( response.data);
       })
@@ -60,10 +58,9 @@ const ReembelsoList = () => {
   
     }
 
+  coletareembolsos(); 
   //const [uses] = useState(mockData);
-  const [reembolsos] = useState(mockData);
-
-  coletareembolsos();
+  const [reembolsos] = useState([]);
 
 
   return (

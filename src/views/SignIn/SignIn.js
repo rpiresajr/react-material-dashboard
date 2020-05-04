@@ -205,6 +205,7 @@ const SignIn = props => {
       ...formState,
       isValid: false 
     }));
+    
 
     //'Access-Control-Expose-Headers': 'X-Authorization'
     axios.post( `${baseURL}/login`,
@@ -213,9 +214,14 @@ const SignIn = props => {
       setFormState(formState => ({
         ...formState,
         isValid: true 
-      }));
+      })); 
+      //console.log(response);
       if (response.status >= 200){ 
-        localStorage.setItem("token",`Bearer ${response.data}`)
+        const token = response.data;
+
+        const token2 ="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmZWxpbnRvQGdtYWlsLmNvbSIsImlhdCI6MTU4ODYxMTEyMSwiaXNzIjoiUk9MRV9VU1VBUklPIiwiZXhwIjoxNTg5NDc1MTIxfQ.8WAF4JmmGJLwfqPmrPAe5XAc74wdAaYf8wVlClI1WYuW_SVDVUQGN6UzAgRhT04pZ8wwRJIBLcp-ZP80tnB6oA";
+
+        localStorage.setItem("token",token2.trim())
         history.push("/dashboard")
       }else{
         setAlertaMensagem("Falha ao autenticar")
