@@ -99,6 +99,7 @@ const Dashboard = () => {
           xs={12}
         >
           <LatestOrders />
+          {localStorage.getItem("token")}
         </Grid>
       </Grid>
     </div>

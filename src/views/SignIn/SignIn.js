@@ -3,9 +3,18 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 
+import baseURL from '../../common/ApiService'
+
+import Snackbar from '@material-ui/core/Snackbar';
+import CustomizedSnackbars from '../../components/CustomizedSnackbars'
 
 import axios from 'axios';
+
+
 import { makeStyles } from '@material-ui/styles';
+
+
+
 import {
   Grid,
   Button,
@@ -14,10 +23,9 @@ import {
   Link,
   Typography
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
-import Axios from 'axios';
+
+
 
 const schema = {
   email: {
@@ -141,11 +149,10 @@ const SignIn = props => {
     errors: {}
   });
 
-  const [token, setToken] = useState('');
-  const URL_SITE = "http://localhost:8181/login"
-
   useEffect(() => {
     const errors = validate(formState.values, schema);
+
+    localStorage.setItem("token","");
 
     setFormState(formState => ({
       ...formState,
@@ -176,6 +183,16 @@ const SignIn = props => {
   };
 
 
+  const [alertaAbrir, setAlerta] = useState(false)
+  const [alertaMensagem, setAlertaMensagem] = useState('')
+  const [alertaTipo, setAlertaTipo] = useState('success')
+
+  
+
+  const handleClose = () => {
+    setAlertaMensagem('');
+    setAlerta(false);
+  };
 
   const handleSignIn = event => {
     event.preventDefault();
@@ -183,30 +200,68 @@ const SignIn = props => {
 
     console.log(formState.values);
 
-
-
+    
+    setFormState(formState => ({
+      ...formState,
+      isValid: false 
+    }));
 
     //'Access-Control-Expose-Headers': 'X-Authorization'
-    axios.post(URL_SITE,formState.values,{ headers: {'Access-Control-Expose-Headers': 'X-Authorization'} })
-    .then( function(response) {
-      if (response.status >= 200){
-        console.log("Autenticado com sucesso")
+    axios.post( `${baseURL}/login`,
+                formState.values
+    ).then( function(response) {
+      setFormState(formState => ({
+        ...formState,
+        isValid: true 
+      }));
+      if (response.status >= 200){ 
+        localStorage.setItem("token",`Bearer ${response.data}`)
         history.push("/dashboard")
       }else{
-        console.log("Falha ao autenticar")
+        setAlertaMensagem("Falha ao autenticar")
+        setAlertaTipo("warning")
       }
       
-    })
-    .catch( error => {
+    }).catch( error => {
       const err = (`"Erro --> "${error}`)
-        
+      setAlerta(true)
       if (err.includes("403") || err.includes("401")){
-        console.log("Usu'ario/Senha invalidos");
+        setAlertaMensagem("Usuario/Senha invalidos")
+        setAlertaTipo("warning")
+        //console.log("Usuario/Senha invalidos");
       }else{
-        console.log("Falha ao conectar com o servidor")
+        setAlertaMensagem("Falha ao conectar com o servidor")
+        setAlertaTipo("error")
+        //console.log("Falha ao conectar com o servidor")
       }
-        
+      
+      setFormState(formState => ({
+        ...formState,
+        isValid: true 
+      }));
+      /*
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("1")
+        console.log(error.response.data)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("2");
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("3")
+        console.log("Error", error.message)
+      }
+      console.log("4")
+      console.log(error.config)
+      */
+
     });
+    
 
     //history.push('/');
   };
@@ -327,6 +382,12 @@ const SignIn = props => {
           </div>
         </Grid>
       </Grid>
+
+      <CustomizedSnackbars  autoHideDuration={6000} 
+                                      open={alertaAbrir} 
+                                      handleClose={handleClose} 
+                                      severity={alertaTipo} 
+                                      mensagem={alertaMensagem}/>
     </div>
   );
 };
