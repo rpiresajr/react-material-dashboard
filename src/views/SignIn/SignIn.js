@@ -7,7 +7,6 @@ import {baseURL} from '../../common/ApiService';
 
 import LocalStorageService from "../../common/LocalStorageService";
 
-import Snackbar from '@material-ui/core/Snackbar';
 import CustomizedSnackbars from '../../components/CustomizedSnackbars'
 
 import axios from 'axios';
@@ -20,7 +19,6 @@ import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
   Button,
-  IconButton,
   TextField,
   Link,
   Typography

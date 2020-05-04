@@ -1,16 +1,11 @@
 import axios, { create } from 'axios';
 import LocalStorageService from "../LocalStorageService";
 
+//export const baseURL = "http://132.145.208.127:8181"
 export const baseURL = "http://localhost:8181"
 
 
 const localStorageService = LocalStorageService.getService();
-
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authentication': `Bearer ${localStorageService.getAccessToken()}`
-}
 
 const headersSemToken = {
     'Content-Type': 'application/json'

@@ -23,12 +23,17 @@ const clickButtonCell = (id) => {
 const ReembelsoList = () => {
   const classes = useStyles();
 
-  const coletareembolsos = () => {
+  const [reembolsos, setReembolsos] = useState([]);
 
+  const listarReembolsos = () => {
+
+    console.log("Buscando os reembolsos")
     axiosInstance.get('/api/despesas/v1')
     .then( response => {
-        //console.log( response.data);
-        setReembolsos(response.data);
+        console.log("aqui")
+        console.log( response.data);
+        const reembolsos = response.data;
+        setReembolsos(reembolsos);
       })
     .catch( error => {
         console.log("falha ao retornar as despesas")
@@ -36,17 +41,15 @@ const ReembelsoList = () => {
         
       });
   
-    }
-
-  //const [uses] = useState(mockData);
-  const [reembolsos, setReembolsos] = useState([]);
-
+  }
 
   return (
     <div className={classes.root}>
       <ReembolsoToolbar />
       <div className={classes.content}>
-        <ReembolsoTable clickButtonCell={clickButtonCell} reembolsos={reembolsos} />
+        <ReembolsoTable 
+            clickButtonCell={clickButtonCell} 
+            reembolsos={reembolsos} />
       </div>
     </div>
   );
