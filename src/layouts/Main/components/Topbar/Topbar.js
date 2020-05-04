@@ -8,6 +8,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 
+
+const fechar = () => {
+  console.log("top")
+}
+
 const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none'
@@ -16,7 +21,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   signOutButton: {
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
+    onClick: fechar
   }
 }));
 

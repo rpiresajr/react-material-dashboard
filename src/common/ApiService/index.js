@@ -1,1 +1,1 @@
-export { default } from './ApiService'
+export { baseURL, axiosInstance } from './ApiService'

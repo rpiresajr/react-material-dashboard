@@ -1,6 +1,6 @@
-import { create } from 'axios';
+import axios, { create } from 'axios';
 
-const baseURL = "http://localhost:8181"
+export const baseURL = "http://localhost:8181"
 
 const headers = {
     'Content-Type': 'application/json',
@@ -11,4 +11,13 @@ const headersSemToken = {
     'Content-Type': 'application/json'
 }
 
-export default baseURL;
+export const axiosInstance = axios.create({
+    baseURL: baseURL,
+    timeout: 5000,
+    headers: {
+        'Authorization': localStorage.getItem("token"),
+        'Content-Type': 'application/json'
+    }
+  }); 
+
+

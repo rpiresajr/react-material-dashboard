@@ -3,7 +3,7 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 
-import baseURL from '../../common/ApiService'
+import {baseURL} from '../../common/ApiService'
 
 import Snackbar from '@material-ui/core/Snackbar';
 import CustomizedSnackbars from '../../components/CustomizedSnackbars'

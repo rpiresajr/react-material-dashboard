@@ -87,7 +87,7 @@ const ReembolsoTable = props => {
                       <TableCell>{reembolso.tipomotivo.dstipomotivo}</TableCell>
                       <TableCell>{reembolso.dscontacontabil}</TableCell>
                       <TableCell>
-                          <IconButton color="secondary" onClick={e => props.clickbuttoncell(reembolso.despesaEmbeddable.cddespesa)} >
+                          <IconButton color="secondary" onClick={e => props.clickButtonCell(reembolso.despesaEmbeddable.cddespesa)} >
                             <EditIcon />
                           </IconButton>
                       

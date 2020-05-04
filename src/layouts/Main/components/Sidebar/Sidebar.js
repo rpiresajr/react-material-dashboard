@@ -10,7 +10,7 @@ import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ImageIcon from '@material-ui/icons/Image';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 
 import MarkunreadMailbox from '@material-ui/icons/MarkunreadMailbox';
 
@@ -56,9 +56,9 @@ const Sidebar = props => {
       icon: <MarkunreadMailbox />
     },
     {
-      title: 'Login',
+      title: 'Logout',
       href: '/sign-in',
-      icon: <LockOpenIcon />
+      icon: <ExitToApp />
     },
     {
       title: 'Users',
@@ -69,11 +69,6 @@ const Sidebar = props => {
       title: 'Products',
       href: '/products',
       icon: <ShoppingBasketIcon />
-    },
-    {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />
     },
     {
       title: 'Typography',
