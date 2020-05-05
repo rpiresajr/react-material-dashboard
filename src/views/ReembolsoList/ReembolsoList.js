@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { ReembolsoToolbar, ReembolsoTable } from './components';
 //import mockData from '../Mocks/dataReembolso';
 
 import {axiosInstance} from '../../common/ApiService'
-import Routes from '../../Routes' 
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,44 +15,46 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const clickButtonCell = (id) => {
+  console.log(`"Item a ser alterado:"${id}`);
+}
 
-
-const ReembelsoList = () => {
-  
+const ReembolsoList = () => {
   const classes = useStyles();
 
-  const [reembolsos, setReembolsos] = useState([]);
+  const [listaDespesas, setDespesas] = useState([]);
 
-  console.log("aqui 1");
-  const listarReembolsos = () => {
+  
+  const listarDespesas = () => {
+    console.log("aqui 2");
     axiosInstance.get('/api/despesas/v1')
     .then( response => {
         console.log("aqui")
-        console.log( response.data);
-        const reembolsos = response.data;
-        setReembolsos(reembolsos);
+        //console.log( response.data);
+        const lista = response.data;
+        setDespesas(lista);
       })
     .catch( error => {
         console.log("falha ao retornar as despesas")
-        console.log(error)
+        //console.log(error)
         
     });
   }
 
-  const clickButtonCell = (id) => {
-    console.log(`"Item a ser alterado:"${id}`);
-  }
-  
+  useEffect(() =>{
+    listarDespesas();
+  },[]);
+
   return (
     <div className={classes.root}>
       <ReembolsoToolbar />
       <div className={classes.content}>
         <ReembolsoTable 
             clickButtonCell={clickButtonCell} 
-            reembolsos={reembolsos} />
+            reembolsos={listaDespesas} />
       </div>
     </div>
   );
 };
 
-export default ReembelsoList;
+export default ReembolsoList;

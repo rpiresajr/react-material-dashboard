@@ -14,7 +14,7 @@ axios.interceptors.request.use(
         if (token) {
             config.headers['X-Authorization'] = `Bearer ${localStorageService.getAccessToken()}`;
         }
-        config.headers['Content-Type'] = 'application/json';
+        //config.headers['Content-Type'] = 'application/json';
         return config;
     },
     error => {

@@ -1,14 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
-
-
-
-import {axiosInstance} from '../../../../common/ApiService'
-import { Password } from './components';
-
 import {
   Card,
   CardActions,
@@ -16,7 +10,8 @@ import {
   Avatar,
   Typography,
   Divider,
-  Button
+  Button,
+  LinearProgress
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -39,60 +34,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
 const AccountProfile = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
 
-
-  const userDefault = {
-      nmusuario: "Nome",
-      dsendereco: "Endereco",
-      estado: {
-        nmestado: "Estado"
-      },
-      cidade: {
-        nmcidade: "Cidade"
-      },
-      dsemail: "email@email.com",
-      dtativacao: "2019-12-21T21:00:00"
+  const user = {
+    name: 'Shen Zhi',
+    city: 'Los Angeles',
+    country: 'USA',
+    timezone: 'GTM-7',
+    avatar: '/images/avatars/avatar_11.png'
   };
-  
-
-  const [user, setUser] = useState(userDefault);
-  const [fotoAvatar, setFotoAvatar] = useState()
-
-  const getAvatar = () => {
-    axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
-    .then( response => {
-        const base64Flag = "data:image/jpeg;base64,";
-        var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
-        //console.log(base64Flag+base64)
-        setFotoAvatar(base64Flag+base64);
-    })
-    .catch( error => {
-      console.log("falha ao retornar a foto")
-      //console.log(error)
-    }); 
-  }
-
-  const getProfile = () => {
-    axiosInstance.get('/api/usuario/v1/profile')
-    .then( response => {
-        setUser(response.data)
-    })
-    .catch( error => {
-      console.log("falha ao retornar o profile")
-      //console.log(error)
-    });
-  }
-
-
-  useEffect(()=>{
-    getProfile();
-    getAvatar();
-  },[]);
 
   return (
     <Card
@@ -106,30 +59,33 @@ const AccountProfile = props => {
               gutterBottom
               variant="h2"
             >
-              {user.nmusuario}
+              John Doe
             </Typography>
             <Typography
               className={classes.locationText}
               color="textSecondary"
               variant="body1"
             >
-              {user.dsendereco}
-              <br/>
-              {user.cidade.nmcidade}, {user.estado.nmestado}
+              {user.city}, {user.country}
             </Typography>
             <Typography
               className={classes.dateText}
               color="textSecondary"
               variant="body1"
             >
-              Ativo desde {moment(`${user.dtativacao}`,"YYYY-MM-DDThh:mm:ss").format('DD/MM/YY')} 
-              <br />
-              {user.dsemail}
+              {moment().format('hh:mm A')} ({user.timezone})
             </Typography>
           </div>
           <Avatar
             className={classes.avatar}
-            src={fotoAvatar}
+            src={user.avatar}
+          />
+        </div>
+        <div className={classes.progress}>
+          <Typography variant="body1">Profile Completeness: 70%</Typography>
+          <LinearProgress
+            value={70}
+            variant="determinate"
           />
         </div>
       </CardContent>
@@ -140,9 +96,9 @@ const AccountProfile = props => {
           color="primary"
           variant="text"
         >
-          Upload foto
+          Upload picture
         </Button>
-        <Button variant="text">Remove foto</Button>
+        <Button variant="text">Remove picture</Button>
       </CardActions>
     </Card>
   );

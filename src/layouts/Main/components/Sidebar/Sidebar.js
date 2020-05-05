@@ -56,6 +56,11 @@ const Sidebar = props => {
       icon: <MarkunreadMailbox />
     },
     {
+      title: 'Configurações',
+      href: '/account',
+      icon: <AccountBoxIcon />
+    },
+    {
       title: 'Logout',
       href: '/sign-in',
       icon: <ExitToApp />
@@ -79,11 +84,6 @@ const Sidebar = props => {
       title: 'Icons',
       href: '/icons',
       icon: <ImageIcon />
-    },
-    {
-      title: 'Account',
-      href: '/account',
-      icon: <AccountBoxIcon />
     },
     {
       title: 'Settings',

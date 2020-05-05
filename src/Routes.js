@@ -39,6 +39,12 @@ const Routes = () => {
         path="/despesas"
       />
       <RouteWithLayout
+        component={AccountView}
+        exact
+        layout={MainLayout}
+        path="/account"
+      />
+      <RouteWithLayout
         component={SignInView}
         exact
         layout={MinimalLayout}
@@ -68,12 +74,7 @@ const Routes = () => {
         layout={MainLayout}
         path="/icons"
       />
-      <RouteWithLayout
-        component={AccountView}
-        exact
-        layout={MainLayout}
-        path="/account"
-      />
+
       <RouteWithLayout
         component={SettingsView}
         exact
