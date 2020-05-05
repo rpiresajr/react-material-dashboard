@@ -12,8 +12,9 @@ import {
   TextField
 } from '@material-ui/core';
 
-import CustomizedSnackbars from '../../../../components/CustomizedSnackbars';
+import {axiosInstance} from '../../../../common/ApiService';
 
+import CustomizedSnackbars from '../../../../components/CustomizedSnackbars';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -28,48 +29,101 @@ const Password = props => {
   const [confirm, setConfirm] = useState('')
   
   const [erroSenha, setErroSenha] = useState(false)
-  const [erroSenhaDesc, setErroSenhaDesc] = useState(false)
+  const [erroSenhaDesc, setErroSenhaDesc] = useState('')
   
-  const [erroConfSenha, setErroConfSenha] = useState(false)
-  const [erroSenhaConfDesc, setErroSenhaConfDesc] = useState(false)
+  const [erroConfSenha, setErroConfSenha] = useState(true)
+  const [erroSenhaConfDesc, setErroSenhaConfDesc] = useState('As senhas devem ser iguais')
 
-  
+  const [alertaAbrir, setAlerta] = useState(false)
+  const [alertaMensagem, setAlertaMensagem] = useState('')
+  const [alertaTipo, setAlertaTipo] = useState('success')
+
+  const handleClose = () => {
+    setAlertaMensagem('');
+    setAlerta(false);
+  };
 
   const clickButton = () => {
-    console.log(senha,confirm)
-    
+    console.log(erroSenha,erroConfSenha)
+
+    if ( erroSenha || erroConfSenha ){
+      return
+    }
+
+    const novasenha = {
+      email: '',
+      senha: senha
+    }
+
+    console.log(novasenha)
+
+    axiosInstance.post("/api/usuario/v1/novasenha",novasenha)
+    .then( response => {
+      setAlerta(true)
+      setAlertaMensagem("Senha atualizada com sucesso!")
+      setAlertaTipo("success")
+      setConfirm('');
+      setSenha('');
+    })
+    .catch( error => {
+      setAlerta(true)
+      setAlertaMensagem("Falha ao atualizar a senha!")
+      setAlertaTipo("error")
+
+    });
   }
 
   const handleChangeSenha = event => {
-    setSenha(event.value)
+    event.persist();
+
+    const valor = event.target.value;
+
+    console.log(valor)
+    setSenha(valor)
     
     console.log(senha,confirm);
+    setErroSenha(false)
 
-    if (senha) {
+    if (!valor) {
+      setErroSenha(true)
       setErroSenhaDesc("Deve ser informado uma senha");
     }
     // After null checking, check length
-    else if (senha.length < 8) {
+    else if (valor.length < 8) {
+      setErroSenha(true)
       setErroSenhaDesc("A senha deve possuir no minimo 8 caracteres");
     }
     // Check for capital letters
-    else if (/([A-Z]+)/g.test(senha)) {
+    else if (!/([A-Z]+)/g.test(valor)) {
+      setErroSenha(true)
       setErroSenhaDesc("A senha deve conter pelo menos uma letra maiúscula")
     }
-    if ( !erroSenhaDesc ){
+    else if (!/([a-z]+)/g.test(valor)) {
       setErroSenha(true)
+      setErroSenhaDesc("A senha deve conter pelo menos uma letra minúscula")
     }
+    else if (!/([0-9]+)/g.test(valor)) {
+      setErroSenha(true)
+      setErroSenhaDesc("A senha deve conter pelo menos um número")
+    }
+
 
     
 
   };
 
   const handleChangeConfirm = event => {
-    setConfirm(event.value)
+    event.persist();
+
+    const valor = event.target.value;
+
+    console.log(valor)
+    setConfirm(valor)
     
     console.log(senha,confirm);
+    setErroConfSenha(false)
 
-    if (senha !== confirm){
+    if (senha !== valor){
       setErroConfSenha(true)
       setErroSenhaConfDesc("As senhas devem ser iguais")
     }else{
@@ -92,6 +146,7 @@ const Password = props => {
         <Divider />
         <CardContent>
           <TextField
+            className={classes.textField}
             fullWidth
             label="Senha"
             name="senha"
@@ -101,22 +156,23 @@ const Password = props => {
             }
             onChange={handleChangeSenha}
             type="password"
-            value={senha}
+            value={senha || ''}
             variant="outlined"
           />
           <TextField
+            className={classes.textField}
             fullWidth
             label="Confirme a senha"
+            name="confirm"
             error={erroConfSenha}
             helperText={
               erroConfSenha ? erroSenhaConfDesc : null
             }
-            name="confirm"
             onChange={handleChangeConfirm}
-            style={{ marginTop: '1rem' }}
             type="password"
-            value={confirm}
+            value={confirm || ''}
             variant="outlined"
+            style={{ marginTop: '1rem' }}
           />
         </CardContent>
         <Divider />
@@ -130,9 +186,11 @@ const Password = props => {
           </Button>
         </CardActions>
       </form>
-      <CustomizedSnackbars 
-
-      />
+      <CustomizedSnackbars  autoHideDuration={6000} 
+                                      open={alertaAbrir} 
+                                      handleClose={handleClose} 
+                                      severity={alertaTipo} 
+                                      mensagem={alertaMensagem}/>
     </Card>
   );
 };
