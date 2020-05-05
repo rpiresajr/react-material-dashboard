@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+
+import {axiosInstance} from '../../../../common/ApiService'
+
+
 import {
   Card,
   CardHeader,
@@ -22,36 +26,109 @@ const AccountDetails = props => {
 
   const classes = useStyles();
 
-  const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+
+  const [user, setUserValues] = useState({
+    nmusuario: '',
+    dsemail: '',
+    dsendereco: '',
+    estado: {
+      idestado: 0,
+      nmestado: ''
+    },
+    cidade:{
+       idcidade: 0,
+       nmcidade: ''
+    }
   });
 
+  const handleChangeEstado = event => {
+      const est = {
+        estado: {idestado: event.target.value } 
+      }
+      console.log(est);
+      setUserValues({...user, ...est});
+  }
+
   const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+    console.log(event.target.name,event.target.value)
+    
+
+    if (event.target.name === "estado"){
+      const est = {
+        estado: {idestado: event.target.value } 
+      }
+      //console.log(est);
+      setUserValues({...user, ...est});
+      getCidades(event.target.value);
+    }else if (event.target.name === "cidade"){
+      const cid = {
+        cidade: {idcidade: event.target.value } 
+      }
+      //console.log(est);
+      setUserValues({...user, ...cid});
+    }else {
+      setUserValues({
+        ...user,
+        [event.target.name]: event.target.value
+      });
+
+    }
   };
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
-    }
-  ];
+
+
+  const [states, setStates] = useState([])
+  const [cities, setCities] = useState([])
+
+  const getEstados = () => {
+    axiosInstance.get('/api/estados/v1')
+    .then( response => {
+      setStates(response.data)
+    })
+    .catch( error => {
+      console.log("falha ao retornar o estado")
+      //console.log(error)
+    });
+  }
+
+  const getCidades = (idEstado) => {
+    setCities([]);
+    axiosInstance.get(`/api/cidades/v1/${idEstado}`)
+    .then( response => {
+      setCities(response.data)
+    })
+    .catch( error => {
+      console.log("falha ao retornar a cidade")
+      console.log(error)
+      console.log(error.config)
+    });
+  }
+
+
+  const getProfile = () => {
+    
+    axiosInstance.get('/api/usuario/v1/profile')
+    .then( response => {
+        const idEstado = response.data;
+        getCidades(idEstado.estado.idestado);
+
+        setUserValues({
+          ...response.data
+        });
+
+    })
+    .catch( error => {
+      console.log("falha ao retornar o profile")
+      //console.log(error)
+    });
+  }
+
+
+
+  useEffect(()=>{
+    getProfile();
+    getEstados();
+  },[]);
 
   return (
     <Card
@@ -63,8 +140,8 @@ const AccountDetails = props => {
         noValidate
       >
         <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
+          subheader="Todos os campos com (*) são obrigatórios"
+          title="Dados Cadastrais"
         />
         <Divider />
         <CardContent>
@@ -79,13 +156,13 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
+                helperText="Insira o nome Completo"
+                label="Nome"
                 margin="dense"
-                name="firstName"
+                name="nmusuario"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={user.nmusuario}
                 variant="outlined"
               />
             </Grid>
@@ -96,31 +173,32 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Last name"
+                label="Email"
                 margin="dense"
-                name="lastName"
+                name="dsemail"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={user.dsemail}
                 variant="outlined"
               />
             </Grid>
             <Grid
               item
-              md={6}
+              md={12}
               xs={12}
             >
               <TextField
                 fullWidth
-                label="Email Address"
+                label="Endereço"
                 margin="dense"
-                name="email"
+                name="dsendereco"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={user.dsendereco}
                 variant="outlined"
               />
             </Grid>
+
             <Grid
               item
               md={6}
@@ -128,39 +206,24 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
+                label="Selecione o Estado"
                 margin="dense"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                margin="dense"
-                name="state"
+                name="estado"
                 onChange={handleChange}
                 required
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={user.estado.idestado || ''}
                 variant="outlined"
               >
+
                 {states.map(option => (
                   <option
-                    key={option.value}
-                    value={option.value}
+                    key={option.idestado}
+                    value={option.idestado}
                   >
-                    {option.label}
+                    {option.nmestado}
                   </option>
                 ))}
               </TextField>
@@ -172,14 +235,27 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Country"
+                label="Selecione a cidade"
                 margin="dense"
-                name="country"
+                name="cidade"
                 onChange={handleChange}
                 required
-                value={values.country}
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={user.cidade.idcidade || ''}
                 variant="outlined"
-              />
+              >
+
+                {cities.map(option => (
+                  <option
+                    key={option.idcidade}
+                    value={option.idcidade}
+                  >
+                    {option.nmcidade}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
           </Grid>
         </CardContent>
