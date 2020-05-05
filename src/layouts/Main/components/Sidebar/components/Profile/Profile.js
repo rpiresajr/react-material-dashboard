@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
+
+import {axiosInstance} from '../../../../../../common/ApiService'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,11 +29,46 @@ const Profile = props => {
 
   const classes = useStyles();
 
-  const user = {
-    name: 'Shen Zhi',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: 'Brain Director'
+  const userDefault = {
+    nmusuario: "Nome",
+    cidade: {
+      nmcidade: "Cidade"
+    }
   };
+
+
+  const [user, setUser] = useState(userDefault);
+  const [fotoAvatar, setFotoAvatar] = useState()
+
+  const getAvatar = () => {
+    axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
+    .then( response => {
+        const base64Flag = "data:image/jpeg;base64,";
+        var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
+        //console.log(base64Flag+base64)
+        setFotoAvatar(base64Flag+base64);
+    })
+    .catch( error => {
+      console.log("falha ao retornar a foto")
+      //console.log(error)
+    }); 
+  }
+
+  const getProfile = () => {
+    axiosInstance.get('/api/usuario/v1/profile')
+    .then( response => {
+        setUser(response.data)
+    })
+    .catch( error => {
+      console.log("falha ao retornar o profile")
+      //console.log(error)
+    });
+  }
+
+  useEffect(()=>{
+    getProfile();
+    getAvatar();
+  },[]);
 
   return (
     <div
@@ -41,16 +79,16 @@ const Profile = props => {
         alt="Person"
         className={classes.avatar}
         component={RouterLink}
-        src={user.avatar}
+        src={fotoAvatar}
         to="/settings"
       />
       <Typography
         className={classes.name}
         variant="h4"
       >
-        {user.name}
+        {user.nmusuario}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="body2">{user.cidade.nmcidade}</Typography>
     </div>
   );
 };

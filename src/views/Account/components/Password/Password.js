@@ -78,10 +78,8 @@ const Password = props => {
 
     const valor = event.target.value;
 
-    console.log(valor)
     setSenha(valor)
     
-    console.log(senha,confirm);
     setErroSenha(false)
 
     if (!valor) {
