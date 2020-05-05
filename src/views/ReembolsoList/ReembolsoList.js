@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { ReembolsoToolbar, ReembolsoTable } from './components';
@@ -16,18 +16,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const clickButtonCell = (id) => {
-  console.log(`"Item a ser alterado:"${id}`);
-}
+
 
 const ReembelsoList = () => {
+  
   const classes = useStyles();
 
   const [reembolsos, setReembolsos] = useState([]);
 
+  console.log("aqui 1");
   const listarReembolsos = () => {
-
-    console.log("Buscando os reembolsos")
     axiosInstance.get('/api/despesas/v1')
     .then( response => {
         console.log("aqui")
@@ -39,10 +37,13 @@ const ReembelsoList = () => {
         console.log("falha ao retornar as despesas")
         console.log(error)
         
-      });
-  
+    });
   }
 
+  const clickButtonCell = (id) => {
+    console.log(`"Item a ser alterado:"${id}`);
+  }
+  
   return (
     <div className={classes.root}>
       <ReembolsoToolbar />

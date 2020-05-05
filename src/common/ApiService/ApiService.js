@@ -7,10 +7,6 @@ export const baseURL = "http://localhost:8181"
 
 const localStorageService = LocalStorageService.getService();
 
-const headersSemToken = {
-    'Content-Type': 'application/json'
-}
-
 
 axios.interceptors.request.use(
     config => {
