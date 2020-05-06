@@ -4,10 +4,8 @@ import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 
-
-
 import {axiosInstance} from '../../../../common/ApiService'
-import { Password } from './components';
+
 
 import {
   Card,
@@ -87,7 +85,16 @@ const AccountProfile = props => {
       //console.log(error)
     });
   }
-
+/*
+  const handleUpload = event => {
+    const data = new FormData();
+    data.append("image", event.target.files[0])
+    
+    api.post("images", data)
+    .then(response => console.log(response))
+    .catch(errors => console.log(errors));
+  }
+*/
 
   useEffect(()=>{
     getProfile();

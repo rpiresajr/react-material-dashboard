@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 
 import {axiosInstance} from '../../../../common/ApiService'
+import CustomizedSnackbars from '../../../../components/CustomizedSnackbars';
 
 
 import {
@@ -26,10 +27,16 @@ const AccountDetails = props => {
 
   const classes = useStyles();
 
+  const [alertaAbrir, setAlerta] = useState(false)
+  const [alertaMensagem, setAlertaMensagem] = useState('')
+  const [alertaTipo, setAlertaTipo] = useState('success')
+  const handleClose = () => {
+    setAlertaMensagem('');
+    setAlerta(false);
+  };
 
   const [user, setUserValues] = useState({
     nmusuario: '',
-    dsemail: '',
     dsendereco: '',
     estado: {
       idestado: 0,
@@ -41,13 +48,35 @@ const AccountDetails = props => {
     }
   });
 
-  const handleChangeEstado = event => {
-      const est = {
-        estado: {idestado: event.target.value } 
-      }
-      console.log(est);
-      setUserValues({...user, ...est});
+  const atualizaDados = () => {
+
+    const payload = {
+      cidade: user.cidade.idcidade ,
+      endereco: user.dsendereco,
+      estado: user.estado.idestado,
+      nome: user.nmusuario,
+      cpf: "",
+      senha: "",
+      email: ""
+    }
+    console.log(payload);
+
+    axiosInstance.put('/api/usuario/v1', payload )
+    .then( response => {
+      console.log(response)
+      setAlerta(true)
+      setAlertaMensagem("Dados atualizados com sucesso")
+      setAlertaTipo("success")
+    }).catch(error => {
+      setAlerta(true)
+      setAlertaMensagem("Falha ao atualizar os dados")
+      setAlertaTipo("error")
+      console.log(error)
+      console.log(error.config)
+    })
   }
+
+
 
   const handleChange = event => {
     console.log(event.target.name,event.target.value)
@@ -86,7 +115,9 @@ const AccountDetails = props => {
       setStates(response.data)
     })
     .catch( error => {
-      console.log("falha ao retornar o estado")
+      setAlerta(true)
+      setAlertaMensagem("Falha ao retornar a lista de estados")
+      setAlertaTipo("error")
       //console.log(error)
     });
   }
@@ -98,9 +129,9 @@ const AccountDetails = props => {
       setCities(response.data)
     })
     .catch( error => {
-      console.log("falha ao retornar a cidade")
-      console.log(error)
-      console.log(error.config)
+      setAlerta(true)
+      setAlertaMensagem("Falha ao retornar a lista de cidades")
+      setAlertaTipo("error")
     });
   }
 
@@ -151,7 +182,7 @@ const AccountDetails = props => {
           >
             <Grid
               item
-              md={6}
+              md={12}
               xs={12}
             >
               <TextField
@@ -163,22 +194,6 @@ const AccountDetails = props => {
                 onChange={handleChange}
                 required
                 value={user.nmusuario}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email"
-                margin="dense"
-                name="dsemail"
-                onChange={handleChange}
-                required
-                value={user.dsemail}
                 variant="outlined"
               />
             </Grid>
@@ -264,11 +279,17 @@ const AccountDetails = props => {
           <Button
             color="primary"
             variant="contained"
+            onClick={atualizaDados}
           >
-            Save details
+            Atualizar
           </Button>
         </CardActions>
       </form>
+      <CustomizedSnackbars  autoHideDuration={6000} 
+                                      open={alertaAbrir} 
+                                      handleClose={handleClose} 
+                                      severity={alertaTipo} 
+                                      mensagem={alertaMensagem}/>
     </Card>
   );
 };
