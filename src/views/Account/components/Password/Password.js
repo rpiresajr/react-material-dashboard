@@ -37,7 +37,6 @@ const Password = props => {
   const [alertaAbrir, setAlerta] = useState(false)
   const [alertaMensagem, setAlertaMensagem] = useState('')
   const [alertaTipo, setAlertaTipo] = useState('success')
-
   const handleClose = () => {
     setAlertaMensagem('');
     setAlerta(false);
@@ -55,7 +54,7 @@ const Password = props => {
       senha: senha
     }
 
-    console.log(novasenha)
+    //console.log(novasenha)
 
     axiosInstance.post("/api/usuario/v1/novasenha",novasenha)
     .then( response => {
@@ -115,10 +114,10 @@ const Password = props => {
 
     const valor = event.target.value;
 
-    console.log(valor)
+    //console.log(valor)
     setConfirm(valor)
     
-    console.log(senha,confirm);
+    //console.log(senha,confirm);
     setErroConfSenha(false)
 
     if (senha !== valor){

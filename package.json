@@ -32,9 +32,10 @@
     "@material-ui/lab": "^4.0.0-alpha.52",
     "@material-ui/styles": "^4.9.13",
     "apisauce": "^1.1.1",
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
+    "cors": "^2.8.5",
     "history": "^4.9.0",
     "moment": "^2.25.3",
     "node-sass": "^4.14.1",
@@ -48,7 +49,8 @@
     "recompose": "^0.30.0",
     "underscore": "^1.9.1",
     "uuid": "^3.3.2",
-    "validate.js": "^0.13.1"
+    "validate.js": "^0.13.1",
+    "xhr": "^2.5.0"
   },
   "devDependencies": {
     "eslint": "5.16.0",

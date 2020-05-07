@@ -50,6 +50,10 @@ const AccountDetails = props => {
 
   const atualizaDados = () => {
 
+    if (!user.nmusuario || !user.dsendereco){
+      return
+    }
+
     const payload = {
       cidade: user.cidade.idcidade ,
       endereco: user.dsendereco,
@@ -61,7 +65,7 @@ const AccountDetails = props => {
     }
     console.log(payload);
 
-    axiosInstance.put('/api/usuario/v1', payload )
+    axiosInstance.put('/api/usuario/v1', payload)
     .then( response => {
       console.log(response)
       setAlerta(true)
@@ -96,6 +100,7 @@ const AccountDetails = props => {
       //console.log(est);
       setUserValues({...user, ...cid});
     }else {
+      
       setUserValues({
         ...user,
         [event.target.name]: event.target.value
@@ -108,6 +113,8 @@ const AccountDetails = props => {
 
   const [states, setStates] = useState([])
   const [cities, setCities] = useState([])
+
+
 
   const getEstados = () => {
     axiosInstance.get('/api/estados/v1')
