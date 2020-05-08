@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
 
 import {axiosInstance} from '../../../../../../common/ApiService'
-
+import localStorage from '../../../../../../common/LocalStorageService'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,17 +41,24 @@ const Profile = props => {
   const [fotoAvatar, setFotoAvatar] = useState()
 
   const getAvatar = () => {
-    axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
-    .then( response => {
-        const base64Flag = "data:image/jpeg;base64,";
-        var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
-        //console.log(base64Flag+base64)
-        setFotoAvatar(base64Flag+base64);
-    })
-    .catch( error => {
-      console.log("falha ao retornar a foto")
-      //console.log(error)
-    }); 
+
+    const foto = localStorage.getAvatar();
+
+    if (!foto){
+      axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
+      .then( response => {
+          const base64Flag = "data:image/jpeg;base64,";
+          var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
+          setFotoAvatar(base64Flag+base64);
+          localStorage.setFotoAvatar(base64Flag+base64)
+      })
+      .catch( error => {
+        console.log("falha ao retornar a foto")
+        //console.log(error)
+      });
+    }else{
+      setFotoAvatar(foto);
+    } 
   }
 
   const getProfile = () => {
@@ -63,6 +70,10 @@ const Profile = props => {
       console.log("falha ao retornar o profile")
       //console.log(error)
     });
+  }
+
+  const handleChoosePhoto = () => {
+
   }
 
   useEffect(()=>{
@@ -80,7 +91,7 @@ const Profile = props => {
         className={classes.avatar}
         component={RouterLink}
         src={fotoAvatar}
-        to="/settings"
+        to="/account"
       />
       <Typography
         className={classes.name}

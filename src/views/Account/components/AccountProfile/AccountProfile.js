@@ -1,10 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
+
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 
-import {axiosInstance} from '../../../../common/ApiService'
+import {axiosInstance,axiosInstanceImage} from '../../../../common/ApiService'
+//import uploader from 'base64-image-upload';
+
+import localStorage from "../../../../common/LocalStorageService";
+
+import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import Videocam from '@material-ui/icons/Videocam';
+import Delete from '@material-ui/icons/Delete';
+
 
 
 import {
@@ -42,6 +53,7 @@ const AccountProfile = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
+  
 
 
   const userDefault = {
@@ -62,17 +74,25 @@ const AccountProfile = props => {
   const [fotoAvatar, setFotoAvatar] = useState()
 
   const getAvatar = () => {
-    axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
-    .then( response => {
-        const base64Flag = "data:image/jpeg;base64,";
-        var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
-        //console.log(base64Flag+base64)
-        setFotoAvatar(base64Flag+base64);
-    })
-    .catch( error => {
-      console.log("falha ao retornar a foto")
-      //console.log(error)
-    }); 
+
+    const foto = localStorage.getAvatar();
+
+    if (!foto){
+        axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
+        .then( response => {
+            const base64Flag = "data:image/jpeg;base64,";
+            var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
+            localStorage.setAvatar(base64Flag+base64)
+            setFotoAvatar(base64Flag+base64); 
+            
+        })
+        .catch( error => {
+          console.log("falha ao retornar a foto")
+          //console.log(error)
+        }); 
+      }else{
+        setFotoAvatar(foto); 
+      }
   }
 
   const getProfile = () => {
@@ -85,16 +105,117 @@ const AccountProfile = props => {
       //console.log(error)
     });
   }
-/*
-  const handleUpload = event => {
-    const data = new FormData();
-    data.append("image", event.target.files[0])
-    
-    api.post("images", data)
-    .then(response => console.log(response))
-    .catch(errors => console.log(errors));
+
+  const deleteAvatar = () => {
+
+    axiosInstance.delete('/api/usuario/v1/avatar')
+    .then(response => {
+      setFotoAvatar(null)
+      localStorage.clearAvatar()
+    })
+    .catch(error => {
+        console.log("falha ao remover a foto")
+    })
+
   }
-*/
+
+  // const handleUpload = event => {
+  //   const data = new FormData();
+  //   data.append("image", event.target.files[0])
+    
+  //   axiosInstance.post("/upload/avatar", data)
+  //   .then(response => {
+  //     getAvatar()
+  //   })
+  //   .catch(errors => console.log("Falha ao gravar avatar"));
+  // }
+
+  const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+  
+    console.log("funcao")
+    console.log(b64Data, contentType)
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
+
+  const handleCapture = ({ target }) => {
+        const fileReader = new FileReader();
+        const name = target.accept.includes('image') ? 'images' : 'videos';
+
+        let formData = new FormData();
+
+
+        fileReader.readAsDataURL(target.files[0]);
+        fileReader.onload = (e) => {
+
+        const imgtpy= e.target.result.substring(1,e.target.result.indexOf(",")-1);
+        const imgstr= e.target.result.substring(e.target.result.indexOf(",")+1);
+        const imsbin = b64toBlob(imgstr,imgtpy)
+        formData.append('file', imsbin);
+
+        setFotoAvatar(e.target.result);
+        localStorage.setAvatar(e.target.result)
+
+
+        axiosInstanceImage.post("/upload/avatar", {file: formData.get("file") })
+                            // {file: formData.get("file") }, 
+                            // { headers: { "Content-Type": "multipart/form-data" }})
+        .then(response => {
+          console.log("Foto Atualizada")
+        })
+        .catch(error => {
+          
+           localStorage.clearAvatar();
+           setFotoAvatar(null);
+
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log("1")
+              console.log(error.response.data)
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              console.log("2");
+              console.log(error.request)
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log("3")
+              console.log("Error", error.message)
+            }
+            console.log("4")
+            console.log(error.config)
+
+         });
+         
+         
+
+        // setState((prevState) => ({
+        //     [name]: [...prevState[name], e.target.result]
+        // }));
+    };
+
+
+    
+
+  };
+
 
   useEffect(()=>{
     getProfile();
@@ -102,6 +223,7 @@ const AccountProfile = props => {
   },[]);
 
   return (
+    <form>
     <Card
       {...rest}
       className={clsx(classes.root, className)}
@@ -142,18 +264,34 @@ const AccountProfile = props => {
       </CardContent>
       <Divider />
       <CardActions>
-        <Button
-          className={classes.uploadButton}
-          color="primary"
-          variant="text"
-        >
-          Upload foto
-        </Button>
-        <Button variant="text">Remove foto</Button>
+        <input
+            accept="image/*"
+            className={classes.input}
+            id="icon-button-photo"
+            onChange={handleCapture}
+            type="file"
+            hidden
+        />
+        <label htmlFor="icon-button-photo">
+            <IconButton color="primary" component="span">
+                <PhotoCamera /> 
+            </IconButton>
+        </label>
+        
+        <label >
+            <IconButton color="primary" 
+                onClick={deleteAvatar}
+                component="span">
+                <Delete /> 
+            </IconButton>
+        </label>
+
       </CardActions>
     </Card>
+    </form>
   );
 };
+ 
 
 AccountProfile.propTypes = {
   className: PropTypes.string

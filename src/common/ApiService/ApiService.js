@@ -16,11 +16,11 @@ axios.interceptors.request.use(
         if (token) {
             config.headers['X-Authorization'] = `Bearer ${localStorageService.getAccessToken()}`;
         }
-        config.headers['Content-Type'] = 'application/json';
-        config.headers['Accept'] = 'application/json';
+        //config.headers['Content-Type'] = 'application/json';
+        //config.headers['Accept'] = 'application/json';
         //config.headers['Access-Control-Request-Headers'] = null;
         //config.headers['Access-Control-Request-Method'] = null;
-        config.headers['Access-Control-Max-Age'] = 1400; 
+        //config.headers['Access-Control-Max-Age'] = 1400; 
         
         return config;
     },
@@ -35,17 +35,30 @@ axios.defaults.baseURL = baseURL;
 axios.defaults.timeout = 15000;
 
 
+export const axiosInstance = axios;  
 
-export const axiosInstance = axios; 
-/*
-export const axiosInstance = axios.create({
-    baseURL: baseURL,
-    timeout: 15000,
-    headers: {
-        'Authorization': token,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+const axios2 = axios.create()
+
+axios2.interceptors.request.use(
+    
+    config => {
+        const token = localStorageService.getAccessToken();
+        if (token) {
+            config.headers['X-Authorization'] = `Bearer ${localStorageService.getAccessToken()}`;
+        }
+        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        //config.headers['Content-Transfer-Encoding'] = 'binary';
+        //config.headers['Content-Type'] = 'multipart/form-data';
+        config.headers['Accept'] = 'application/json';
+        //config.headers['mode'] = 'no-cors';
+        
+        return config;
+    },
+    error => {
+        Promise.reject(error)
     }
-  }); 
-*/
+);
+axios2.defaults.baseURL = baseURL;
+axios2.defaults.timeout = 15000;
+export  const axiosInstanceImage = axios2;
 
