@@ -46,9 +46,9 @@ axios2.interceptors.request.use(
         if (token) {
             config.headers['X-Authorization'] = `Bearer ${localStorageService.getAccessToken()}`;
         }
-        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        //config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
         //config.headers['Content-Transfer-Encoding'] = 'binary';
-        //config.headers['Content-Type'] = 'multipart/form-data';
+        config.headers['Content-Type'] = 'multipart/form-data';
         config.headers['Accept'] = 'application/json';
         //config.headers['mode'] = 'no-cors';
         

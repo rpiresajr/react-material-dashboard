@@ -9,6 +9,8 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 
 
+
+
 const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none'
@@ -56,6 +58,8 @@ const Topbar = props => {
           <IconButton
             className={classes.signOutButton}
             color="inherit"
+            component={RouterLink}
+            to="/sign-in"
           >
             <InputIcon />
           </IconButton>

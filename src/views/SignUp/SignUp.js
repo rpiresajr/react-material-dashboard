@@ -14,38 +14,52 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CustomizedSnackbars from '../../components/CustomizedSnackbars'
+import {baseURL} from '../../common/ApiService';
+import axios from 'axios';
 
-import api from '../../common/ApiService'
 
 const schema = {
-  firstName: {
-    presence: { allowEmpty: false, message: 'is required' },
+  nome: {
+    presence: { allowEmpty: false, message: 'é requirido' },
     length: {
       maximum: 32
     }
   },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
+  endereco: {
+    presence: { allowEmpty: false, message: 'é requirido' },
     length: {
       maximum: 32
     }
   },
   email: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: 'é requirido' },
     email: true,
     length: {
       maximum: 64
     }
   },
-  password: {
-    presence: { allowEmpty: false, message: 'is required' },
+  senha: {
+    presence: { allowEmpty: false, message: 'é requirido' },
     length: {
       maximum: 128
     }
   },
   policy: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: 'é requirido' },
     checked: true
+  },
+  estado: {
+    presence: { allowEmpty: false, message: 'é requirido' },
+    length: {
+      maximum: 128
+    }
+  },
+  cidade: {
+    presence: { allowEmpty: false, message: 'é requirido' },
+    length: {
+      maximum: 128
+    }
   }
 };
 
@@ -154,19 +168,33 @@ const SignUp = props => {
     errors: {}
   });
 
+  const [alertaAbrir, setAlerta] = useState(false);
+  const [alertaMensagem, setAlertaMensagem] = useState('');
+  const [alertaTipo, setAlertaTipo] = useState('success');
+  const handleClose = () => {
+    setAlertaMensagem('');
+    setAlerta(false);
+  };
+
+
   useEffect(() => {
     const errors = validate(formState.values, schema);
+    
+    getEstados();
 
     setFormState(formState => ({
       ...formState,
       isValid: errors ? false : true,
       errors: errors || {}
     }));
+
   }, [formState.values]);
 
   const handleChange = event => {
     event.persist();
 
+
+    //console.log( event.target.name,event.target.value)
     setFormState(formState => ({
       ...formState,
       values: {
@@ -189,8 +217,88 @@ const SignUp = props => {
 
   const handleSignUp = event => {
     event.preventDefault();
-    history.push('/');
+    //history.push('/');
+
+    axios.post( `${baseURL}/api/usuario/v1`,
+        formState.values
+    ).then( response => {
+
+      console.log(response);
+      if (response.status < 300){ 
+        setAlerta(true)
+        setAlertaMensagem("Cadastro efetuado com sucesso")
+        setAlertaTipo("success")
+        history.push("/sign-in")
+      }
+
+      }).catch( error => {
+
+        const errorData = error.response.data
+        const err = (`"Erro --> "${error}`)
+        setAlerta(true)
+        
+        if ( errorData ){
+          setAlertaMensagem(`${errorData['error']}`)
+          setAlertaTipo("warning")
+        }else{
+          setAlertaMensagem("Falha ao conectar com o servidor")
+          setAlertaTipo("error")
+        }
+
+
+        /*
+        if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("1")
+        console.log(error.response.data)
+        } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("2");
+        console.log(error.request)
+        } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("3")
+        console.log("Error", error.message)
+        }
+        console.log("4")
+        console.log(error.config)
+        */        
+
+        });
+
   };
+
+  const [states, setStates] = useState([])
+  const [cities, setCities] = useState([])
+
+  const getEstados = () => {
+    axios.get(`${baseURL}/api/estados/v1`)
+    .then( response => {
+      setStates(response.data)
+    })
+    .catch( error => {
+      setAlerta(true)
+      setAlertaMensagem("Falha ao retornar a lista de estados")
+      setAlertaTipo("error")
+      //console.log(error)
+    });
+  }
+
+  const getCidades = (idEstado) => {
+    setCities([]);
+    axios.get(`${baseURL}/api/cidades/v1/${idEstado}`)
+    .then( response => {
+      setCities(response.data)
+    })
+    .catch( error => {
+      setAlerta(true)
+      setAlertaMensagem("Falha ao retornar a lista de cidades")
+      setAlertaTipo("error")
+    });
+  }
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -212,21 +320,20 @@ const SignUp = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                Sistema de controle de reembolso DTSBa Solutions.
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body1"
                 >
-                  Takamaru Ayako
+                  <a href="http://www.dtsba.com.br">DTSBa</a>
                 </Typography>
                 <Typography
                   className={classes.bio}
                   variant="body2"
                 >
-                  Manager at inVision
+                  Curitiba PR
                 </Typography>
               </div>
             </div>
@@ -253,41 +360,43 @@ const SignUp = props => {
                   className={classes.title}
                   variant="h2"
                 >
-                  Create new account
+                  Criar uma nova conta
                 </Typography>
                 <Typography
                   color="textSecondary"
                   gutterBottom
                 >
-                  Use your email to create new account
+                  Use seu email para criar uma nova conta
                 </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('firstName')}
+                  error={hasError('nome')}
                   fullWidth
                   helperText={
-                    hasError('firstName') ? formState.errors.firstName[0] : null
+                    hasError('nome') ? formState.errors.nome[0] : null
                   }
-                  label="First name"
-                  name="firstName"
+                  label="Nome"
+                  name="nome"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.firstName || ''}
+                  value={formState.values.nome || ''}
                   variant="outlined"
+                  required
                 />
                 <TextField
                   className={classes.textField}
-                  error={hasError('lastName')}
+                  error={hasError('endereco')}
                   fullWidth
                   helperText={
-                    hasError('lastName') ? formState.errors.lastName[0] : null
+                    hasError('endereco') ? formState.errors.endereco[0] : null
                   }
-                  label="Last name"
-                  name="lastName"
+                  label="Endereco"
+                  name="endereco"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.lastName || ''}
+                  value={formState.values.endereco || ''}
                   variant="outlined"
+                  required
                 />
                 <TextField
                   className={classes.textField}
@@ -296,26 +405,79 @@ const SignUp = props => {
                   helperText={
                     hasError('email') ? formState.errors.email[0] : null
                   }
-                  label="Email address"
+                  label="Email"
                   name="email"
                   onChange={handleChange}
                   type="text"
                   value={formState.values.email || ''}
                   variant="outlined"
+                  required
                 />
+
+              <TextField
+                fullWidth
+                label="Selecione o Estado"
+                margin="dense"
+                name="estado"
+                onChange={handleChange}
+                required
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={formState.values.estado || ''}
+                variant="outlined"
+              >
+
+                {states.map(option => (
+                  <option
+                    key={option.idestado}
+                    value={option.idestado}
+                  >
+                    {option.nmestado}
+                  </option>
+                ))}
+              </TextField>
+
+              <TextField
+                fullWidth
+                label="Selecione a cidade"
+                margin="dense"
+                name="cidade"
+                onChange={handleChange}
+                required
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={formState.values.cidade || ''}
+                variant="outlined"
+              >
+
+                {cities.map(option => (
+                  <option
+                    key={option.idcidade}
+                    value={option.idcidade}
+                  >
+                    {option.nmcidade}
+                  </option>
+                ))}
+              </TextField>
+
+
+
                 <TextField
                   className={classes.textField}
-                  error={hasError('password')}
+                  error={hasError('senha')}
                   fullWidth
                   helperText={
-                    hasError('password') ? formState.errors.password[0] : null
+                    hasError('senha') ? formState.errors.senha[0] : null
                   }
-                  label="Password"
-                  name="password"
+                  label="Senha"
+                  name="senha"
                   onChange={handleChange}
                   type="password"
-                  value={formState.values.password || ''}
+                  value={formState.values.senha || ''}
                   variant="outlined"
+                  required
                 />
                 <div className={classes.policy}>
                   <Checkbox
@@ -330,7 +492,7 @@ const SignUp = props => {
                     color="textSecondary"
                     variant="body1"
                   >
-                    I have read the{' '}
+                    Eu li os {' '}
                     <Link
                       color="primary"
                       component={RouterLink}
@@ -338,7 +500,7 @@ const SignUp = props => {
                       underline="always"
                       variant="h6"
                     >
-                      Terms and Conditions
+                      Termos e Condições
                     </Link>
                   </Typography>
                 </div>
@@ -356,19 +518,19 @@ const SignUp = props => {
                   type="submit"
                   variant="contained"
                 >
-                  Sign up now
+                  Cadastrar
                 </Button>
                 <Typography
                   color="textSecondary"
                   variant="body1"
                 >
-                  Have an account?{' '}
+                  Já possui uma conta?{' '}
                   <Link
                     component={RouterLink}
                     to="/sign-in"
                     variant="h6"
                   >
-                    Sign in
+                    Login
                   </Link>
                 </Typography>
               </form>
@@ -376,6 +538,11 @@ const SignUp = props => {
           </div>
         </Grid>
       </Grid>
+      <CustomizedSnackbars  autoHideDuration={6000} 
+                                      open={alertaAbrir} 
+                                      handleClose={handleClose} 
+                                      severity={alertaTipo} 
+                                      mensagem={alertaMensagem}/>
     </div>
   );
 };

@@ -36,7 +36,7 @@ const ReembolsoList = () => {
       })
     .catch( error => {
         console.log("falha ao retornar as despesas")
-        //console.log(error)
+        console.log(error)
         
     });
   }

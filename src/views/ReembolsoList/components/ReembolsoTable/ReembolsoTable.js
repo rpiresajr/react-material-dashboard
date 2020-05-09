@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 
@@ -67,9 +67,10 @@ const ReembolsoTable = props => {
                 <TableRow>
                   <TableCell>Despesa</TableCell>
                   <TableCell>Criação</TableCell>
-                  <TableCell>Atualização</TableCell>
                   <TableCell>Motivo</TableCell>
                   <TableCell>Conta Contabil</TableCell>
+                  <TableCell>Qtd Custos</TableCell>
+                  <TableCell>Total R$</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -78,16 +79,21 @@ const ReembolsoTable = props => {
                     <TableRow
                     className={classes.tableRow}
                     hover
-                    key={reembolso.despesaEmbeddable.cddespesa}
+                    key={reembolso.cddespesa}
                     >
 
-                      <TableCell>{reembolso.dsdespesa}</TableCell>
+                      <TableCell>{reembolso.despesa}</TableCell>
                       <TableCell>{reembolso.dtcriacao.replace("T","  ")}</TableCell>
-                      <TableCell>{reembolso.dtatualizacao.replace("T","  ")}</TableCell>
-                      <TableCell>{reembolso.tipomotivo.dstipomotivo}</TableCell>
-                      <TableCell>{reembolso.dscontacontabil}</TableCell>
+                      <TableCell>{reembolso.motivo}</TableCell>
+                      <TableCell>{reembolso.ccontabil}</TableCell>
+                      <TableCell>{reembolso.qtd}</TableCell>
+                      <TableCell>{reembolso.valor}</TableCell>
                       <TableCell>
-                          <IconButton color="secondary" onClick={e => props.clickButtonCell(reembolso.despesaEmbeddable.cddespesa)} >
+                          <IconButton color="secondary" 
+                                  //onClick={e => props.clickButtonCell(reembolso.cddespesa)} 
+                                  component={RouterLink}
+                                  to={`/despesa/${reembolso.cddespesa}`}
+                                  >
                             <EditIcon />
                           </IconButton>
                       

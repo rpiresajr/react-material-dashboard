@@ -47,10 +47,15 @@ const Profile = props => {
     if (!foto){
       axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
       .then( response => {
-          const base64Flag = "data:image/jpeg;base64,";
-          var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
-          setFotoAvatar(base64Flag+base64);
-          localStorage.setFotoAvatar(base64Flag+base64)
+        const base64Flag = "data:image/png;base64,";
+        var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
+        //console.log(base64Flag+base64)
+        if(base64){
+          localStorage.setAvatar(base64Flag+base64)
+          setFotoAvatar(base64Flag+base64); 
+        }
+
+          
       })
       .catch( error => {
         console.log("falha ao retornar a foto")
@@ -73,7 +78,7 @@ const Profile = props => {
   }
 
   const handleChoosePhoto = () => {
-
+      //<Typography variant="body2">{user.cidade.nmcidade}</Typography>
   }
 
   useEffect(()=>{
@@ -99,7 +104,7 @@ const Profile = props => {
       >
         {user.nmusuario}
       </Typography>
-      <Typography variant="body2">{user.cidade.nmcidade}</Typography>
+      
     </div>
   );
 };

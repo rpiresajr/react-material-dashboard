@@ -157,6 +157,7 @@ const SignIn = props => {
     //localStorage.setItem("token","");
 
     localStorageService.clearToken();
+    localStorageService.clearAvatar();
 
     setFormState(formState => ({
       ...formState,
@@ -190,9 +191,6 @@ const SignIn = props => {
   const [alertaAbrir, setAlerta] = useState(false)
   const [alertaMensagem, setAlertaMensagem] = useState('')
   const [alertaTipo, setAlertaTipo] = useState('success')
-
-  
-
   const handleClose = () => {
     setAlertaMensagem('');
     setAlerta(false);
@@ -307,7 +305,7 @@ const SignIn = props => {
                   className={classes.bio}
                   variant="body2"
                 >
-                  Curitiba SC
+                  Curitiba PR
                 </Typography>
               </div>
             </div>

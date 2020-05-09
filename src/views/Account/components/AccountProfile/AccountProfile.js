@@ -80,10 +80,13 @@ const AccountProfile = props => {
     if (!foto){
         axiosInstance.get('/api/usuario/v1/avatar', { responseType: 'arraybuffer' })
         .then( response => {
-            const base64Flag = "data:image/jpeg;base64,";
+            const base64Flag = "data:image/png;base64,";
             var base64 = btoa(String.fromCharCode(...new Uint8Array(response.data)))
-            localStorage.setAvatar(base64Flag+base64)
-            setFotoAvatar(base64Flag+base64); 
+
+            if(base64){
+              localStorage.setAvatar(base64Flag+base64)
+              setFotoAvatar(base64Flag+base64); 
+            }
             
         })
         .catch( error => {
@@ -130,28 +133,28 @@ const AccountProfile = props => {
   //   .catch(errors => console.log("Falha ao gravar avatar"));
   // }
 
-  const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
-    const byteCharacters = atob(b64Data);
-    const byteArrays = [];
-  
-    console.log("funcao")
-    console.log(b64Data, contentType)
+  function base64toBlob(base64Data, contentType) {
+    contentType = contentType || '';
+    var sliceSize = 1024;
+    var byteCharacters = atob(base64Data);
+    var bytesLength = byteCharacters.length;
+    var slicesCount = Math.ceil(bytesLength / sliceSize);
+    var byteArrays = new Array(slicesCount);
 
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-  
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-  
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+        var begin = sliceIndex * sliceSize;
+        var end = Math.min(begin + sliceSize, bytesLength);
+
+        var bytes = new Array(end - begin);
+        for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+            bytes[i] = byteCharacters[offset].charCodeAt(0);
+        }
+        byteArrays[sliceIndex] = new Uint8Array(bytes);
     }
-  
-    const blob = new Blob(byteArrays, {type: contentType});
-    return blob;
-  }
+    return new Blob(byteArrays);
+}
+
+
 
   const handleCapture = ({ target }) => {
         const fileReader = new FileReader();
@@ -163,16 +166,18 @@ const AccountProfile = props => {
         fileReader.readAsDataURL(target.files[0]);
         fileReader.onload = (e) => {
 
-        const imgtpy= e.target.result.substring(1,e.target.result.indexOf(",")-1);
+        const imgtpy= e.target.result.substring(5,e.target.result.indexOf(";"));
         const imgstr= e.target.result.substring(e.target.result.indexOf(",")+1);
-        const imsbin = b64toBlob(imgstr,imgtpy)
-        formData.append('file', imsbin);
+        const imgbin = base64toBlob(imgstr,imgtpy)
+        console.log(imgbin)
+        formData.append('file', imgbin);
 
+        
         setFotoAvatar(e.target.result);
-        localStorage.setAvatar(e.target.result)
+        localStorage.setAvatar(e.target.result) 
 
 
-        axiosInstanceImage.post("/upload/avatar", {file: formData.get("file") })
+        axiosInstanceImage.post("/upload/avatar", {file: imgstr })
                             // {file: formData.get("file") }, 
                             // { headers: { "Content-Type": "multipart/form-data" }})
         .then(response => {

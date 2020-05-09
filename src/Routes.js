@@ -15,7 +15,8 @@ import {
   SignUp as SignUpView,
   SignIn as SignInView,
   NotFound as NotFoundView,
-  ReembolsoList as ReembolsoListView
+  ReembolsoList as ReembolsoListView,
+  ReembolsoCadastro as ReembolsoCadastro
 } from './views';
 
 const Routes = () => {
@@ -31,6 +32,12 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/dashboard"
+      />
+      <RouteWithLayout
+        component={ReembolsoCadastro}
+        exact
+        layout={MainLayout}
+        path="/despesa/*"
       />
       <RouteWithLayout
         component={ReembolsoListView}
