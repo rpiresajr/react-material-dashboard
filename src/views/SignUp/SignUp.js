@@ -419,7 +419,7 @@ const SignUp = props => {
                 label="Selecione o Estado"
                 margin="dense"
                 name="estado"
-                onChange={handleChange}
+                onChange={getCidades(formState.values.estado)}
                 required
                 select
                 // eslint-disable-next-line react/jsx-sort-props

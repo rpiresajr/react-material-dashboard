@@ -200,7 +200,7 @@ const SignIn = props => {
     event.preventDefault();
 
 
-    console.log(formState.values);
+    //console.log(formState.values);
 
     
     setFormState(formState => ({
