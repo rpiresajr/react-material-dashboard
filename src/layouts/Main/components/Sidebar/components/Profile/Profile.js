@@ -33,6 +33,9 @@ const Profile = props => {
     nmusuario: "Nome",
     cidade: {
       nmcidade: "Cidade"
+    },
+    estado: {
+      dsuf: "XX"
     }
   };
 
@@ -69,6 +72,7 @@ const Profile = props => {
   const getProfile = () => {
     axiosInstance.get('/api/usuario/v1/profile')
     .then( response => {
+        //console.log(response.data)
         setUser(response.data)
     })
     .catch( error => {
@@ -104,6 +108,7 @@ const Profile = props => {
       >
         {user.nmusuario}
       </Typography>
+      <Typography variant="body2">{user.cidade.nmcidade} - {user.estado.dsuf}</Typography>
       
     </div>
   );

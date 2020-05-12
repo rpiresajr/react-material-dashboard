@@ -11,6 +11,16 @@ const LocalStorageService = (function(){
       localStorage.setItem('access_token', token);
       localStorage.setItem('refresh_token', token);
     }
+
+    function _setNome(nome){
+      localStorage.setItem('nomeacesso',nome);
+    }
+
+    function _getNome(){
+      return localStorage.getItem('nomeacesso');
+    }
+
+
     function _getAccessToken() {
       return localStorage.getItem('access_token');
     }
@@ -44,7 +54,9 @@ const LocalStorageService = (function(){
       clearToken : _clearToken,
       setAvatar: _setAvatar,
       getAvatar: _getAvatar,
-      clearAvatar: _clearAvatar
+      clearAvatar: _clearAvatar,
+      setNome: _setNome,
+      getNome: _getNome
     }
    })();
    export default LocalStorageService;

@@ -67,7 +67,7 @@ const AccountDetails = props => {
 
     axiosInstance.put('/api/usuario/v1', payload)
     .then( response => {
-      console.log(response)
+      //console.log(response)
       setAlerta(true)
       setAlertaMensagem("Dados atualizados com sucesso")
       setAlertaTipo("success")
@@ -83,7 +83,7 @@ const AccountDetails = props => {
 
 
   const handleChange = event => {
-    console.log(event.target.name,event.target.value)
+    //console.log(event.target.name,event.target.value)
     
 
     if (event.target.name === "estado"){
@@ -239,7 +239,7 @@ const AccountDetails = props => {
                 value={user.estado.idestado || ''}
                 variant="outlined"
               >
-
+                <option value=""></option>
                 {states.map(option => (
                   <option
                     key={option.idestado}
@@ -268,7 +268,7 @@ const AccountDetails = props => {
                 value={user.cidade.idcidade || ''}
                 variant="outlined"
               >
-
+                <option value=""></option>
                 {cities.map(option => (
                   <option
                     key={option.idcidade}

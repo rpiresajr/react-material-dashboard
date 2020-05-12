@@ -182,6 +182,7 @@ const SignUp = props => {
     
     getEstados();
 
+    //console.log(formState.values.estado)
     setFormState(formState => ({
       ...formState,
       isValid: errors ? false : true,
@@ -209,6 +210,11 @@ const SignUp = props => {
         [event.target.name]: true
       }
     }));
+
+    if (event.target.name === "estado"){
+      getCidades(event.target.value)
+    }
+
   };
 
   const handleBack = () => {
@@ -223,7 +229,7 @@ const SignUp = props => {
         formState.values
     ).then( response => {
 
-      console.log(response);
+      //console.log(response);
       if (response.status < 300){ 
         setAlerta(true)
         setAlertaMensagem("Cadastro efetuado com sucesso")
@@ -294,6 +300,7 @@ const SignUp = props => {
       setCities(response.data)
     })
     .catch( error => {
+      //console.log(error.config);
       setAlerta(true)
       setAlertaMensagem("Falha ao retornar a lista de cidades")
       setAlertaTipo("error")
@@ -419,7 +426,7 @@ const SignUp = props => {
                 label="Selecione o Estado"
                 margin="dense"
                 name="estado"
-                onChange={getCidades(formState.values.estado)}
+                onChange={handleChange}
                 required
                 select
                 // eslint-disable-next-line react/jsx-sort-props
@@ -427,7 +434,7 @@ const SignUp = props => {
                 value={formState.values.estado || ''}
                 variant="outlined"
               >
-
+                <option value=""></option>
                 {states.map(option => (
                   <option
                     key={option.idestado}
@@ -451,7 +458,7 @@ const SignUp = props => {
                 value={formState.values.cidade || ''}
                 variant="outlined"
               >
-
+                <option value=""></option>
                 {cities.map(option => (
                   <option
                     key={option.idcidade}
