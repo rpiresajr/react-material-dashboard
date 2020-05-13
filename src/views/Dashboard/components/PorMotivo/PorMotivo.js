@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
   chartContainer: {
     position: 'relative',
-    height: '300px'
+    height: '310px'
   },
   stats: {
     marginTop: theme.spacing(2),
@@ -53,11 +53,9 @@ const useStyles = makeStyles(theme => ({
   },
   device: {
     textAlign: 'center',
-    padding: theme.spacing(1)
-  },
-  deviceIcon: {
-    color: theme.palette.icon
+    padding: theme.spacing(0.5)
   }
+  
 }));
 
 const PorMotivo = props => {
@@ -115,6 +113,10 @@ const PorMotivo = props => {
 
 
   const legenda = props.legenda;
+
+  const maxcols = 4;
+  let   qtdcols =0;
+
 /*
   const devices = [
     {
@@ -160,15 +162,17 @@ const PorMotivo = props => {
             <div
               className={classes.device}
               key={lgd.title}
+              
             >
-              <span className={classes.deviceIcon}>{lgd.icon}</span>
+              <span >{lgd.icon}</span>
               <Typography variant="body1">{lgd.title}</Typography>
               <Typography
                 style={{ color: lgd.color }}
                 variant="h2"
               >
-                {lgd.value}%
               </Typography>
+              <br />
+              {lgd.value}%
             </div>
           ))}
         </div>
