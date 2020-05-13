@@ -6,4 +6,4 @@ export { default as LatestSales } from './LatestSales';
 export { default as ClientesCadastrados } from './ClientesCadastrados';
 export { default as TotalPago } from './TotalPago';
 export { default as DespesasAbertas } from './DespesasAbertas';
-export { default as UsersByDevice } from './UsersByDevice';
+export { default as PorMotivo } from './PorMotivo';

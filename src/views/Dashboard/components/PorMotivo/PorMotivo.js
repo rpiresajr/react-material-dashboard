@@ -16,6 +16,28 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import TabletMacIcon from '@material-ui/icons/TabletMac';
 
+
+
+// visita
+import PeopleIcon from '@material-ui/icons/People';
+// viagem
+import TimeToLeaveIcon from '@material-ui/icons/TimeToLeave';
+
+// treinamento
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+
+// reuniao 
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+
+// workshop
+import ApartmentIcon from '@material-ui/icons/Apartment';
+
+// projeto
+import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
+
+//curso
+import DonutSmallIcon from '@material-ui/icons/DonutSmall';
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -38,12 +60,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersByDevice = props => {
+const PorMotivo = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
   const theme = useTheme();
 
+  /*
   const data = {
     datasets: [
       {
@@ -58,8 +81,15 @@ const UsersByDevice = props => {
         hoverBorderColor: theme.palette.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: ['VISITA', 
+        'VIAGEM',
+        'PROJETO',
+        'REUNIAO',
+        'WORKSHOP',
+        'TREINAMENTO',
+        'CURSO']
   };
+  */
 
   const options = {
     legend: {
@@ -83,9 +113,12 @@ const UsersByDevice = props => {
     }
   };
 
+
+  const legenda = props.legenda;
+/*
   const devices = [
     {
-      title: 'Desktop',
+      title: 'Visita',
       value: '63',
       icon: <LaptopMacIcon />,
       color: theme.palette.primary.main
@@ -102,7 +135,8 @@ const UsersByDevice = props => {
       icon: <PhoneIphoneIcon />,
       color: theme.palette.warning.main
     }
-  ];
+  ]
+  */
 
   return (
     <Card
@@ -110,34 +144,30 @@ const UsersByDevice = props => {
       className={clsx(classes.root, className)}
     >
       <CardHeader
-        action={
-          <IconButton size="small">
-            <RefreshIcon />
-          </IconButton>
-        }
-        title="Users By Device"
+        
+        title="MOTIVOS"
       />
       <Divider />
       <CardContent>
         <div className={classes.chartContainer}>
           <Doughnut
-            data={data}
+            data={props.data}
             options={options}
           />
         </div>
         <div className={classes.stats}>
-          {devices.map(device => (
+          {legenda.map(lgd => (
             <div
               className={classes.device}
-              key={device.title}
+              key={lgd.title}
             >
-              <span className={classes.deviceIcon}>{device.icon}</span>
-              <Typography variant="body1">{device.title}</Typography>
+              <span className={classes.deviceIcon}>{lgd.icon}</span>
+              <Typography variant="body1">{lgd.title}</Typography>
               <Typography
-                style={{ color: device.color }}
+                style={{ color: lgd.color }}
                 variant="h2"
               >
-                {device.value}%
+                {lgd.value}%
               </Typography>
             </div>
           ))}
@@ -147,8 +177,8 @@ const UsersByDevice = props => {
   );
 };
 
-UsersByDevice.propTypes = {
+PorMotivo.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersByDevice;
+export default PorMotivo;
