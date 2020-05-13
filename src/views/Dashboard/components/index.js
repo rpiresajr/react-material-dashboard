@@ -1,8 +1,8 @@
 export { default as Bullet } from './Bullet';
 export { default as Budget } from './Budget';
-export { default as LatestOrders } from './LatestOrders';
+export { default as ListaDespesasAbertas } from './ListaDespesasAbertas';
 export { default as LatestProducts } from './LatestProducts';
-export { default as LatestSales } from './LatestSales';
+export { default as GraficoDespesas } from './GraficoDespesas';
 export { default as ClientesCadastrados } from './ClientesCadastrados';
 export { default as TotalPago } from './TotalPago';
 export { default as DespesasAbertas } from './DespesasAbertas';

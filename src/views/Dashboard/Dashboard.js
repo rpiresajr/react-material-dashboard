@@ -29,10 +29,9 @@ import {
   DespesasAbertas,
   ClientesCadastrados,
   TotalPago,
-  LatestSales,
+  GraficoDespesas,
   PorMotivo,
-  LatestProducts,
-  LatestOrders, 
+  ListaDespesasAbertas, 
   Bullet
 } from './components';
 
@@ -56,6 +55,7 @@ const Dashboard = () => {
 
   const [dataMotivos, setDataMotivos] = useState([])
   const [legendaMotivos, setLegendaMotivos] = useState([])
+  const [dataMes, setDataMes] = useState([])
 
   const listaCores = [
         "#1E90FF",
@@ -66,6 +66,82 @@ const Dashboard = () => {
         "#F0E68C",
         "#E0FFFF"
   ]
+
+
+  
+
+  const getInfoMes = () => {
+
+    axiosInstance.get('/api/despesas/v1/mes')
+    .then( response => {
+
+      const labels = []
+      const dataAbertos = []
+      const dataFechados = []
+      
+      const ret = response.data
+      let count = -1;
+      let valold ="";
+
+
+      
+      const valores = {
+          abertos: 0,
+          fechados: 0
+      }
+
+      ret.forEach(val => {
+        count++;
+        if (labels.indexOf(val.dtformat) === -1){
+          labels.push(val.dtformat)
+        }
+        
+        if (val.dtformat !== valold){
+          if (count>0){
+            dataAbertos.push(valores.abertos);
+            dataFechados.push(valores.fechados);
+          }
+          valores.abertos = 0;
+          valores.fechados = 0;
+        }
+
+
+        if (val.status === "FECHADO"){
+          valores.fechados += val.valor;
+        }else{
+          valores.abertos += val.valor;
+        }
+
+        valold = val.dtformat;
+      });
+      dataAbertos.push(valores.abertos);
+      dataFechados.push(valores.fechados);
+
+
+      
+
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'ABERTO',
+            backgroundColor: listaCores[4],
+            data: dataAbertos
+          },
+          {
+            label: 'FECHADO',
+            backgroundColor: listaCores[1],
+            data: dataFechados
+          }
+        ]
+      };
+      setDataMes(data)
+
+    })
+    .catch(error =>{
+      console.log(error)
+    })
+  }
 
   const getPorMotivo = () => {
 
@@ -152,36 +228,6 @@ const Dashboard = () => {
           };
           setDataMotivos(dataN);
           setLegendaMotivos(motivos);
-         // console.log(dataN);
-          // setMotivo({
-          //   ...lista
-          // });
-
-        
-          /*
-  const devices = [
-    {
-      title: 'Visita',
-      value: '63',
-      icon: <LaptopMacIcon />,
-      color: theme.palette.primary.main
-    },
-    {
-      title: 'Tablet',
-      value: '15',
-      icon: <TabletMacIcon />,
-      color: theme.palette.error.main
-    },
-    {
-      title: 'Mobile',
-      value: '23',
-      icon: <PhoneIphoneIcon />,
-      color: theme.palette.warning.main
-    }
-  ]
-  */
-
-
           
         })
       .catch( error => {
@@ -237,6 +283,7 @@ const Dashboard = () => {
   useEffect(() => {
     getDespesasInfo();
     getPorMotivo();
+    getInfoMes();
   },[])
 
   return (
@@ -296,7 +343,9 @@ const Dashboard = () => {
           xl={9}
           xs={12}
         >
-          <LatestSales />
+          <GraficoDespesas 
+            data={dataMes}
+          />
         </Grid>
         <Grid
           item
@@ -310,24 +359,16 @@ const Dashboard = () => {
             legenda={legendaMotivos}
            />
         </Grid>
+        
         <Grid
           item
-          lg={4}
-          md={6}
-          xl={3}
-          xs={12}
-        >
-          <LatestProducts />
-        </Grid>
-        <Grid
-          item
-          lg={8}
+          lg={12}
           md={12}
           xl={9}
           xs={12}
         >
-          <LatestOrders />
-          {localStorage.getItem("token")}
+          <ListaDespesasAbertas />
+
         </Grid>
       </Grid>
     </div>
