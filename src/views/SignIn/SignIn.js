@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
     flexBasis: '600px'
   },
   quoteText: {
-    color: theme.palette.white,
+    color: theme.palette.black,
     fontWeight: 300
   },
   name: {
@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.white
   },
   bio: {
-    color: theme.palette.white
+    color: theme.palette.black
   },
   contentContainer: {},
   content: {

@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Badge, Hidden, IconButton, Avatar } from '@material-ui/core';
+import { AppBar, Toolbar, Badge, Hidden, IconButton, Avatar , Typography} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
@@ -42,6 +42,11 @@ const Topbar = props => {
             src="/images/logos/dts.png"
           />
         </RouterLink>
+        <div align="center"> 
+        <Typography alignItems='center' color="inherit" variant="h1" >
+        &nbsp;&nbsp;SISTEMA DE CONTROLE DE DESPESAS - DTS
+        </Typography>
+        </div>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <IconButton color="inherit">

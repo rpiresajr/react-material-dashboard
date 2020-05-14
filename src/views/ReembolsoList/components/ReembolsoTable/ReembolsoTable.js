@@ -9,6 +9,8 @@ import { makeStyles } from '@material-ui/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import {StatusBullet} from '../../../../components'
+
 import {
   Card,
   CardActions,
@@ -49,8 +51,13 @@ const useStyles = makeStyles(theme => ({
 const ReembolsoTable = props => {
   const { className, reembolsos, ...rest } = props;
 
-
-  
+  const statusColors = {
+    ABERTO: 'info',
+    EMANALISE: 'warning',
+    APROVADO: 'success',
+    PAGO: 'success',
+    REPROVADO: 'danger'
+  };
 
   const classes = useStyles();
 
@@ -65,6 +72,7 @@ const ReembolsoTable = props => {
             <Table>
               <TableHead>
                 <TableRow>
+                <TableCell>Status</TableCell>
                   <TableCell>Despesa</TableCell>
                   <TableCell>Criação</TableCell>
                   <TableCell>Motivo</TableCell>
@@ -81,9 +89,23 @@ const ReembolsoTable = props => {
                     hover
                     key={reembolso.cddespesa}
                     >
-
+                      <TableCell>
+                      <div className={classes.statusContainer}>
+                        <StatusBullet
+                          className={classes.status}
+                          color={statusColors[reembolso.status.replace(" ","")]}
+                          size="sm"
+                        />
+                        &nbsp;&nbsp;
+                        {reembolso.status}
+                      </div>
+                      </TableCell>
                       <TableCell>{reembolso.despesa}</TableCell>
-                      <TableCell>{reembolso.dtcriacao.replace("T","  ")}</TableCell>
+                      <TableCell>
+                        {reembolso.dtcriacao.substr(0,10)}
+ 
+                      </TableCell>
+                      
                       <TableCell>{reembolso.motivo}</TableCell>
                       <TableCell>{reembolso.ccontabil}</TableCell>
                       <TableCell>{reembolso.qtd}</TableCell>

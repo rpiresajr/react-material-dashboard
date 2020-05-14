@@ -56,6 +56,7 @@ const Dashboard = () => {
   const [dataMotivos, setDataMotivos] = useState([])
   const [legendaMotivos, setLegendaMotivos] = useState([])
   const [dataMes, setDataMes] = useState([])
+  const [reembolsosAbertos,setReembolsoAberto] = useState([])
 
   const listaCores = [
         "#1E90FF",
@@ -238,7 +239,21 @@ const Dashboard = () => {
 
   }
 
+  const getDespesasEmAberto = () => {
+    axiosInstance.get('/api/despesas/v1/abertas')
+      .then( response => {
+          //console.log("aqui")
+          //console.log( response.data);
+          const lista = response.data;
 
+          setReembolsoAberto(lista)
+          
+        })
+      .catch( error => {
+        //console.log(error)
+        console.log("falha ao retornar as despesas")
+      })
+  }
 
   const getDespesasInfo = () => {
   
@@ -284,6 +299,7 @@ const Dashboard = () => {
     getDespesasInfo();
     getPorMotivo();
     getInfoMes();
+    getDespesasEmAberto();
   },[])
 
   return (
@@ -367,7 +383,9 @@ const Dashboard = () => {
           xl={9}
           xs={12}
         >
-          <ListaDespesasAbertas />
+          <ListaDespesasAbertas
+           reembolsos={reembolsosAbertos}
+             />
 
         </Grid>
       </Grid>
