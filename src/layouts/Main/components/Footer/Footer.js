@@ -27,12 +27,12 @@ const Footer = props => {
           href="http://www.dtsba.com.br/"
           target="_blank"
         >
-          DTSBa
+          DTS Mobile
         </Link>
         . 2020
       </Typography>
       <Typography variant="caption">
-        Curitiba SC
+        Curitiba PR
       </Typography>
     </div>
   );

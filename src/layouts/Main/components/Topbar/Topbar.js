@@ -43,8 +43,8 @@ const Topbar = props => {
           />
         </RouterLink>
         <div align="center"> 
-        <Typography alignItems='center' color="inherit" variant="h1" >
-        &nbsp;&nbsp;SISTEMA DE CONTROLE DE DESPESAS - DTS
+        <Typography alignItems='center' color="inherit" variant="h3" >
+        &nbsp;&nbsp;DTS REEMBOLSO
         </Typography>
         </div>
         <div className={classes.flexGrow} />

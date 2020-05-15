@@ -14,6 +14,8 @@ import {StatusBullet} from '../../../../components'
 import {
   Card,
   CardActions,
+  Divider,
+  CardHeader,
   CardContent,
   Checkbox,
   Table,
@@ -66,6 +68,22 @@ const ReembolsoTable = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
+      <CardHeader
+        action={
+          <Button
+            color="primary"
+            size="small"
+            variant="outlined"
+            title="NOVA DESPESA"
+            component={RouterLink}
+            to={"/despesa/"}
+          >
+            NOVA DESPESA
+          </Button>
+        }
+        title={props.title}
+      />
+      <Divider />
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>

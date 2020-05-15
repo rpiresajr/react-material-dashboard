@@ -11,12 +11,15 @@ import {
   Divider,
   Typography
 } from '@material-ui/core';
+import PerfectScrollbar from 'react-perfect-scrollbar'; 
+import 'react-perfect-scrollbar/dist/css/styles.css'; 
+
+
+
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import TabletMacIcon from '@material-ui/icons/TabletMac';
-
-
 
 // visita
 import PeopleIcon from '@material-ui/icons/People';
@@ -54,6 +57,9 @@ const useStyles = makeStyles(theme => ({
   device: {
     textAlign: 'center',
     padding: theme.spacing(0.5)
+  },
+  full: {
+    width: '100%'
   }
   
 }));
@@ -157,6 +163,9 @@ const PorMotivo = props => {
             options={options}
           />
         </div>
+        <PerfectScrollbar
+         className={classes.full}
+        >
         <div className={classes.stats}>
           {legenda.map(lgd => (
             <div
@@ -165,7 +174,7 @@ const PorMotivo = props => {
               
             >
               <span >{lgd.icon}</span>
-              <Typography variant="body1">{lgd.title}</Typography>
+              <Typography variant="body2">&nbsp;{lgd.title}&nbsp;</Typography>
               <Typography
                 style={{ color: lgd.color }}
                 variant="h2"
@@ -176,6 +185,7 @@ const PorMotivo = props => {
             </div>
           ))}
         </div>
+        </PerfectScrollbar>
       </CardContent>
     </Card>
   );

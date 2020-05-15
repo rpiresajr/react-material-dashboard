@@ -327,7 +327,7 @@ const SignUp = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Sistema de controle de reembolso DTSBa Solutions.
+                DTS Reembolso
               </Typography>
               <div className={classes.person}>
                 <Typography

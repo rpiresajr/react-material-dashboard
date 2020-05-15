@@ -45,7 +45,7 @@
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
     "react-images-uploading": "^2.1.1",
-    "react-perfect-scrollbar": "^1.5.3",
+    "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.0.1",
     "recompose": "^0.30.0",

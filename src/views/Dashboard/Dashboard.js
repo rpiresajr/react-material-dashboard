@@ -385,6 +385,7 @@ const Dashboard = () => {
         >
           <ListaDespesasAbertas
            reembolsos={reembolsosAbertos}
+           title="DESPESAS PENDENTES"
              />
 
         </Grid>

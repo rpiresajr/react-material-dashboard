@@ -51,7 +51,8 @@ const ReembolsoList = () => {
       <div className={classes.content}>
         <ReembolsoTable 
             clickButtonCell={clickButtonCell} 
-            reembolsos={listaDespesas} />
+            reembolsos={listaDespesas}
+            title="TODAS" />
       </div>
     </div>
   );

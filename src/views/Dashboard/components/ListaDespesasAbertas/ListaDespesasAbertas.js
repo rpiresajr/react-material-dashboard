@@ -57,24 +57,13 @@ const ListaDespesasAbertas = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader
-        action={
-          <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-          >
-            NOVA DESPESA
-          </Button>
-        }
-        title="DESPESAS PENDENTES"
-      />
-      <Divider />
+
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
             <ReembolsoTable
               reembolsos={reembolsos}
+              title={props.title}
             />
           </div>
         </PerfectScrollbar>
