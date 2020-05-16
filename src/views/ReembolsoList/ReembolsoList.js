@@ -26,10 +26,8 @@ const ReembolsoList = () => {
 
   
   const listarDespesas = () => {
-    console.log("aqui 2");
     axiosInstance.get('/api/despesas/v1')
     .then( response => {
-        console.log("aqui")
         //console.log( response.data);
         const lista = response.data;
         setDespesas(lista);

@@ -95,7 +95,6 @@ const ReembolsoTable = props => {
                   <TableCell>Criação</TableCell>
                   <TableCell>Motivo</TableCell>
                   <TableCell>Conta Contabil</TableCell>
-                  <TableCell>Qtd Custos</TableCell>
                   <TableCell>Total R$</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
@@ -126,7 +125,6 @@ const ReembolsoTable = props => {
                       
                       <TableCell>{reembolso.motivo}</TableCell>
                       <TableCell>{reembolso.ccontabil}</TableCell>
-                      <TableCell>{reembolso.qtd}</TableCell>
                       <TableCell>{reembolso.valor}</TableCell>
                       <TableCell>
                           <IconButton color="secondary" 

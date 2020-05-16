@@ -23,14 +23,7 @@ const useStyles = makeStyles(() => ({
     root: {}
   }));
 
-const schema = {
-status: {
-    presence: { allowEmpty: false, message: 'é requirido' },
-    length: {
-    maximum: 32
-    }
-}
-}
+
 
 const Reembolso = props => {
     const { className, ...rest } = props;
@@ -42,19 +35,19 @@ const Reembolso = props => {
     const [motivoDespesa,setMotivoDespesa] = useState([]);
 
     const [reembolso, setReembolso] = useState({
-        status: {
-            cdstatus: null
+        tipomotivo: {
+            cdtipomotivo: null
         },
         dsdespesa: null,
         dsobservacao: null,
         dtcriacao: null,
         dtatualizacao: null,
-        tipomotivo: {
-            cdtipomotivo: null
+        status: {
+            cdstatus: null
         },
         dscontacontabil: null,
         ccusto: null
-    });
+    }); 
 
     const [alertaAbrir, setAlerta] = useState(false)
     const [alertaMensagem, setAlertaMensagem] = useState('')
@@ -65,9 +58,7 @@ const Reembolso = props => {
     };
 
     const handleChange = event => {
-        console.log(event.target.name,event.target.value,event.target)
-          
-
+        
           if (event.target.name === "status"){
             const st = {
                 status: {
@@ -90,25 +81,40 @@ const Reembolso = props => {
                 })
         }else{
             setReembolso({
-                ...reembolso
+                ...reembolso,
+                [event.target.name]: event.target.value
               })
           }
 
-          console.log([event.target.name], event.target.value)
-          console.log("reembolso.status.dsstatus",reembolso.status.dsstatus);
       };
 
     const getDespesa = (id) => {
-
+        console.log("Buscando a despesa",id)
         axiosInstance.get(`/api/despesas/v1/${id}`)
         .then(response => {
-            console.log(response.data)
-            setReembolso(response.data)
+            ///console.log("Despesa retornada",response.data)
+            const rbs = response.data;
+            setReembolso({
+                ...rbs
+            });
         })
         .catch(error => {
             console.log("erro ao buscar a despesa")
         })
     
+    } 
+
+    const getStatusDespesa = () =>{
+        axiosInstance.get('/api/statusdespesa/v1')
+        .then(response => {
+            setStatusDespesa(response.data);
+            if (props.despesa){
+                getDespesa(props.despesa)
+            }
+        })
+        .catch(error => {
+            console.log("erro ao buscar o status despesa")
+        })
     }
 
     const getMotivoDespesa = () =>{
@@ -121,19 +127,6 @@ const Reembolso = props => {
         })
         .catch(error => {
             console.log("erro ao buscar o motivo despesa")
-        })
-    }
-    
-    const getStatusDespesa = () =>{
-        axiosInstance.get('/api/statusdespesa/v1')
-        .then(response => {
-            setStatusDespesa(response.data);
-            if (props.despesa){
-                getDespesa(props.despesa)
-            }
-        })
-        .catch(error => {
-            console.log("erro ao buscar o status despesa")
         })
     }
 
@@ -252,7 +245,6 @@ const Reembolso = props => {
                         value={reembolso.status.cdstatus || ''}
                         variant="outlined"
                     >
-                        <option value=""></option>
                         {statusDespesa.map(option => (
                         <option
                             key={option.cdstatus}
