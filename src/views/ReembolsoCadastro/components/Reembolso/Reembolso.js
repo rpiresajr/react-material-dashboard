@@ -26,24 +26,68 @@ const useStyles = makeStyles(() => ({
 
 
 const Reembolso = props => {
-    const { className, ...rest } = props;
+    const { className, setEnableCustos, ...rest } = props;
 
     const classes = useStyles();
 
 
-    const [statusDespesa,setStatusDespesa] = useState([]);
-    const [motivoDespesa,setMotivoDespesa] = useState([]);
+    const [statusDespesa,setStatusDespesa] = useState([
+        {
+            cdstatus: 0,
+            dsstatus: "ABERTO"
+        },
+        {
+            cdstatus: 1,
+            dsstatus: "EM ANALISE"
+        },
+        {
+            cdstatus: 2,
+            dsstatus: "APROVADO"
+        },
+        {
+            cdstatus: 3,
+            dsstatus: "REPROVADO"
+        },
+        {
+            cdstatus: 4,
+            dsstatus: "PAGO"
+        }
+    ]);
+
+
+    const [motivoDespesa,setMotivoDespesa] = useState([
+        {
+            cdtipomotivo: 0,
+            dstipomotivo: "VISITA"
+        },
+        {
+            cdtipomotivo: 1,
+            dstipomotivo: "VIAGEM"
+        },
+        {
+            cdtipomotivo: 2,
+            dstipomotivo: "PROJETO"
+        },
+        {
+            cdtipomotivo: 3,
+            dstipomotivo: "REUNIAO"
+        },
+        {
+            cdtipomotivo: 4,
+            dstipomotivo: "TREINAMENTO"
+        }
+    ]);
 
     const [reembolso, setReembolso] = useState({
         tipomotivo: {
-            cdtipomotivo: null
+            cdtipomotivo: 0
         },
         dsdespesa: null,
         dsobservacao: null,
         dtcriacao: null,
         dtatualizacao: null,
         status: {
-            cdstatus: null
+            cdstatus: 0
         },
         dscontacontabil: null,
         ccusto: null
@@ -94,6 +138,7 @@ const Reembolso = props => {
         .then(response => {
             ///console.log("Despesa retornada",response.data)
             const rbs = response.data;
+            criaCusto();
             setReembolso({
                 ...rbs
             });
@@ -104,6 +149,7 @@ const Reembolso = props => {
     
     } 
 
+    /*
     const getStatusDespesa = () =>{
         axiosInstance.get('/api/statusdespesa/v1')
         .then(response => {
@@ -117,6 +163,7 @@ const Reembolso = props => {
         })
     }
 
+    
     const getMotivoDespesa = () =>{
         axiosInstance.get('/api/tipomotivo/v1')
         .then(response => {
@@ -129,9 +176,16 @@ const Reembolso = props => {
             console.log("erro ao buscar o motivo despesa")
         })
     }
+    */
+
+    const criaCusto = () => {
+        props.setEnableCustos("S")
+    }
 
     useEffect(()=>{
-        getMotivoDespesa();
+        if (props.despesa){
+            getDespesa(props.despesa);
+        }
     },[])
 
     return (
@@ -271,7 +325,6 @@ const Reembolso = props => {
                         value={reembolso.tipomotivo.cdtipomotivo || ''}
                         variant="outlined"
                     >
-                        <option value=""></option>
                         {motivoDespesa.map(option => (
                         <option
                             key={option.cdtipomotivo}
@@ -320,7 +373,7 @@ const Reembolso = props => {
                         <Button
                         color="primary"
                         variant="contained"
-                        
+                        onClick={criaCusto}
                     >
                         Criar
                     </Button>
@@ -337,7 +390,8 @@ const Reembolso = props => {
     };
 
 Reembolso.propTypes = {
-    className: PropTypes.string
+    className: PropTypes.string,
+    setEnableCustos: PropTypes.func
   };
   
 export default Reembolso;

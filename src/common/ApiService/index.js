@@ -1,1 +1,1 @@
-export { baseURL, axiosInstance, axiosInstanceImage } from './ApiService'
+export { baseURL, axiosInstance, axiosInstanceImage, axiosInstancePDF } from './ApiService'

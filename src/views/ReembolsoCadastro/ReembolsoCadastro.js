@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid,
           Typography
 } from '@material-ui/core';
 
 
-import { Reembolso } from './components'
+import { Reembolso, Custo } from './components'
 
 
 const useStyles = makeStyles(theme => ({
@@ -15,7 +15,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ReembolsoCadastro = props => {
-  const { className, reembolsos, ...rest } = props; 
+  const { className, reembolsos, ...rest } = props;
+
+  const [cadCusto, setEnableCustos] = useState(null)
+  
   const classes = useStyles();
 
   return (
@@ -33,8 +36,26 @@ const ReembolsoCadastro = props => {
         >
           <Reembolso 
                   despesa={props.match.params[0]} 
+                  setEnableCustos={setEnableCustos}
           />
+
         </Grid>
+        
+        { (props.match.params[0] || cadCusto === "S") ? (
+        <Grid
+          item
+          lg={12}
+          md={12}
+          xl={12}
+          xs={12}
+        > 
+          <Custo 
+                  despesa={props.match.params[0]} 
+          />
+          
+        </Grid>
+
+        ) : "" }
 
       </Grid>
     </div>

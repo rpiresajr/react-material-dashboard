@@ -8,8 +8,10 @@ import { makeStyles } from '@material-ui/styles';
 
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 import {StatusBullet} from '../../../../components'
+import {axiosInstancePDF} from '../../../../common/ApiService'
 
 import {
   Card,
@@ -63,6 +65,23 @@ const ReembolsoTable = props => {
 
   const classes = useStyles();
 
+  const getDespesas = () =>{
+    axiosInstancePDF.get('/api/report/v1/despesas',{
+      responseType: 'blob' //Force to receive data in a Blob Format
+  })
+    .then(function(response) {
+        var blob = new Blob([response.data], {
+              type: 'application/pdf'
+        });
+        var url = window.URL.createObjectURL(blob)
+        window.open(url);
+      })
+      .catch(function(error) {
+            console.log(error)
+    });
+
+  }
+
   return (
     <Card
       {...rest}
@@ -70,6 +89,7 @@ const ReembolsoTable = props => {
     >
       <CardHeader
         action={
+          <div>
           <Button
             color="primary"
             size="small"
@@ -80,6 +100,14 @@ const ReembolsoTable = props => {
           >
             NOVA DESPESA
           </Button>
+          <IconButton 
+                            title="Gerar PDF"
+                            color="secondary"
+                            onClick={getDespesas}
+                            >
+                            <PictureAsPdfIcon />
+          </IconButton>
+          </div>
         }
         title={props.title}
       />
@@ -129,15 +157,25 @@ const ReembolsoTable = props => {
                       <TableCell>
                           <IconButton color="secondary" 
                                   //onClick={e => props.clickButtonCell(reembolso.cddespesa)} 
+                                  title="Editar a Despesa"
                                   component={RouterLink}
                                   to={`/despesa/${reembolso.cddespesa}`}
                                   >
                             <EditIcon />
                           </IconButton>
                       
-                        <IconButton color="secondary">
+                        <IconButton 
+                          title="Apagar a Despesa"
+                          color="secondary">
                             <DeleteIcon />
                           </IconButton>
+
+                          <IconButton 
+                            title="Gerar PDF"
+                            color="secondary">
+                            <PictureAsPdfIcon />
+                          </IconButton>
+                          
                           
                       </TableCell>
 
