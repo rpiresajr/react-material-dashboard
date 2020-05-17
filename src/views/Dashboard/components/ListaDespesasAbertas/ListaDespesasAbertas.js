@@ -62,6 +62,7 @@ const ListaDespesasAbertas = props => {
         <PerfectScrollbar>
           <div className={classes.inner}>
             <ReembolsoTable
+              tipoPDF="PENDENTES"
               reembolsos={reembolsos}
               title={props.title}
             />

@@ -48,6 +48,7 @@ const ReembolsoList = () => {
       <ReembolsoToolbar />
       <div className={classes.content}>
         <ReembolsoTable 
+            tipoPDF="TODAS"
             clickButtonCell={clickButtonCell} 
             reembolsos={listaDespesas}
             title="TODAS" />

@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ReembolsoTable = props => {
-  const { className, reembolsos, ...rest } = props;
+  const { className, reembolsos, tipoPDF, ...rest } = props;
 
   const statusColors = {
     ABERTO: 'info',
@@ -66,9 +66,18 @@ const ReembolsoTable = props => {
   const classes = useStyles();
 
   const getDespesas = () =>{
-    axiosInstancePDF.get('/api/report/v1/despesas',{
+
+    let urlPdf = ''
+
+    if ( props.tipoPDF === "TODAS"){
+      urlPdf = '/api/report/v1/despesas'
+    }else{
+      urlPdf = '/api/report/v1/despesasabertas'
+    }
+
+    axiosInstancePDF.get(urlPdf,{
       responseType: 'blob' //Force to receive data in a Blob Format
-  })
+     })
     .then(function(response) {
         var blob = new Blob([response.data], {
               type: 'application/pdf'
@@ -193,6 +202,7 @@ const ReembolsoTable = props => {
 
 ReembolsoTable.propTypes = {
   className: PropTypes.string,
+  tipoPDF: PropTypes.string.isRequired,
   reembolsos: PropTypes.array.isRequired
 };
 
