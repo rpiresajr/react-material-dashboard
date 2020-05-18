@@ -65,6 +65,25 @@ const ReembolsoTable = props => {
 
   const classes = useStyles();
 
+  const clickButtonCellPDF = (id) => {
+    console.log("Buscando PDF da despesa",id)
+
+    axiosInstancePDF.get(`/api/report/v1/custos/${id}`,{
+      responseType: 'blob' //Force to receive data in a Blob Format
+     })
+    .then(function(response) {
+        var blob = new Blob([response.data], {
+              type: 'application/pdf'
+        });
+        var url = window.URL.createObjectURL(blob)
+        window.open(url);
+      })
+      .catch(function(error) {
+            console.log(error)
+    });
+  }
+
+
   const getDespesas = () =>{
 
     let urlPdf = ''
@@ -165,7 +184,6 @@ const ReembolsoTable = props => {
                       <TableCell>{reembolso.valor}</TableCell>
                       <TableCell>
                           <IconButton color="secondary" 
-                                  //onClick={e => props.clickButtonCell(reembolso.cddespesa)} 
                                   title="Editar a Despesa"
                                   component={RouterLink}
                                   to={`/despesa/${reembolso.cddespesa}`}
@@ -181,6 +199,7 @@ const ReembolsoTable = props => {
 
                           <IconButton 
                             title="Gerar PDF"
+                            onClick={e =>clickButtonCellPDF(reembolso.cddespesa)} 
                             color="secondary">
                             <PictureAsPdfIcon />
                           </IconButton>
