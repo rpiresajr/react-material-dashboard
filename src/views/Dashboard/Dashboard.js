@@ -4,6 +4,8 @@ import { Grid } from '@material-ui/core';
 
 import {axiosInstance} from '../../common/ApiService';
 
+
+
 // visita
 import PeopleIcon from '@material-ui/icons/People';
 // viagem
@@ -308,6 +310,7 @@ const Dashboard = () => {
         container
         spacing={4}
       >
+
         <Grid
           item
           lg={3}
@@ -315,6 +318,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
+          
           <Budget 
             valor={bullets.valor}
           />

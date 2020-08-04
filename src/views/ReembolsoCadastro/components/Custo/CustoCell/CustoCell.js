@@ -55,6 +55,9 @@ const CustoCell = props => {
 
   const [custo,setCustos] = useState({
     custoEmbeddable:{
+        despesaEmbeddable: {
+            cddespesa: 0
+        },
         cdcusto: null
     },
     tipocusto: {
@@ -127,7 +130,7 @@ const CustoCell = props => {
 
   const handleChange = event => {
 
-    console.log(event.target.name, event.target.value);
+    //console.log(event.target.name, event.target.value);
     setSaveDados(true)
     if ( event.target.name === "tipocusto"){
         const tc = {
@@ -135,12 +138,12 @@ const CustoCell = props => {
                 cdccusto: event.target.value
             }
         }
-        console.log("tc",tc);
+        //console.log("tc",tc);
         setCustos({
             ...custo,
             ...tc
         })        
-        console.log("listaCustos",custo);
+        //console.log("listaCustos",custo);
     }else{
         setCustos({
             ...custo,
@@ -150,15 +153,14 @@ const CustoCell = props => {
     
     };
 
-    const getImagemCusto = ()=>{
-        console.log("getImagemCusto")
+    const getImagemCusto = (d,c)=>{
+        console.log("getImagemCusto ",d,c)
     }
 
   useEffect(()=>{
     
     if ( props.custo ){
         setCustos(props.custo)
-        console.log("custo",custo);
     }
   },[])
 
@@ -228,7 +230,7 @@ const CustoCell = props => {
                     InputProps={{
                         startAdornment: (
                           <InputAdornment position="start"
-                          onClick={getImagemCusto}
+                          onClick={e => getImagemCusto(custo.custoEmbeddable.despesaEmbeddable.cddespesa,custo.custoEmbeddable.cdcusto)}
                           >
                             <PhotoCamera />
                           </InputAdornment>
