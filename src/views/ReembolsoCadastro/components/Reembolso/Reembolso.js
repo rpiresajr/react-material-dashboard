@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 
 import {axiosInstance} from '../../../../common/ApiService'
-
+import CustomizedSnackbars from '../../../../components/CustomizedSnackbars';
 
 
 import {
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 
 const Reembolso = props => {
-    const { className, cddespesa,cadastroDespesa, AtualizaDespesa, ...rest } = props;
+    const { className, setEnableCustos, ...rest } = props;
 
     const classes = useStyles();
 
@@ -79,29 +79,30 @@ const Reembolso = props => {
     ]);
 
     const [reembolso, setReembolso] = useState({
-        despesaEmbeddable:{
-            cddespesa: 0
-        },
         tipomotivo: {
             cdtipomotivo: 0
         },
         dsdespesa: null,
         dsobservacao: null,
-        dtcriacao: '',
-        dtatualizacao: '',
+        dtcriacao: null,
+        dtatualizacao: null,
         status: {
             cdstatus: 0
-        },
-        cliente: {
-            cdcliente: null,
         },
         dscontacontabil: null,
         ccusto: null
     }); 
 
-    const [despesaRO,setDespesaRO] = useState(false);
+    const [alertaAbrir, setAlerta] = useState(false)
+    const [alertaMensagem, setAlertaMensagem] = useState('')
+    const [alertaTipo, setAlertaTipo] = useState('success')
+    const handleClose = () => {
+      setAlertaMensagem('');
+      setAlerta(false);
+    };
 
     const handleChange = event => {
+        
           if (event.target.name === "status"){
             const st = {
                 status: {
@@ -131,20 +132,16 @@ const Reembolso = props => {
 
       };
 
-
     const getDespesa = (id) => {
         console.log("Buscando a despesa",id)
-
-        setDespesaRO(true)
-            
         axiosInstance.get(`/api/despesas/v1/${id}`)
         .then(response => {
-            console.log("Despesa retornada",response.data)
+            ///console.log("Despesa retornada",response.data)
             const rbs = response.data;
+            criaCusto();
             setReembolso({
                 ...rbs
             });
-
         })
         .catch(error => {
             console.log("erro ao buscar a despesa")
@@ -182,19 +179,12 @@ const Reembolso = props => {
     */
 
     const criaCusto = () => {
-        //props.setEnableCustos("S")
+        props.setEnableCustos("S")
     }
 
-    //const AtualizaDespesa  = props.AtualizaDespesa ;
-    
-    // const AtualizaDespesa = props.AtualizaDespesa(id) {
-    //     getDespesa(id);
-    // }
-
     useEffect(()=>{
-        console.log("despesa para pesquiar",props.cddespesa)
-        if (props.cddespesa){
-            getDespesa(props.cddespesa);
+        if (props.despesa){
+            getDespesa(props.despesa);
         }
     },[])
 
@@ -210,7 +200,7 @@ const Reembolso = props => {
         >
             <CardHeader
             subheader="Todos os campos com (*) são obrigatórios"
-            title={(props.cddespesa ? "Atualizar Despesa" : "Nova Despesa")}
+            title={(props.despesa ? "Atualizar Despesa" : "Nova Despesa")}
             />
             <Divider />
             <CardContent>
@@ -229,9 +219,8 @@ const Reembolso = props => {
                     label="Despesa"
                     margin="dense"
                     name="dsdespesa"
-                    onChange={(!despesaRO) ? handleChange : e => {}}
+                    onChange={handleChange}
                     required
-                    readOnly={despesaRO}
                     value={reembolso.dsdespesa || ''}
                     variant="outlined"
                 />
@@ -262,9 +251,9 @@ const Reembolso = props => {
                     fullWidth
                     label="Centro de Custo"
                     margin="dense"
-                    name="ccusto"
+                    name="cccusto"
                     onChange={handleChange}
-                    value={reembolso.ccusto || ''}
+                    value={reembolso.cccusto || ''}
                     variant="outlined"
                 />
 
@@ -276,14 +265,14 @@ const Reembolso = props => {
                     lg={6}
                     xs={12}
                 >
-                    { (props.cddespesa) ? (
+                    { (props.despesa) ? (
                     <div>
                     <TextField
                         fullWidth
                         label="Data de Criação"
                         margin="dense"
                         name="dtcriacao"
-                        readOnly={true} 
+                        readonly={true} 
                         value={reembolso.dtcriacao || ''}
                         variant="outlined"
                     />
@@ -292,7 +281,7 @@ const Reembolso = props => {
                         label="Data de Atualização"
                         margin="dense"
                         name="dtatualizacao"
-                        readOnly={true} 
+                        readonly={true} 
                         value={reembolso.dtatualizacao || ''}
                         variant="outlined"
                     />
@@ -355,7 +344,7 @@ const Reembolso = props => {
             <CardActions
              
              >
-            { (props.cddespesa) ? (
+            { (props.despesa) ? (
                     <Grid
                     container
                     
@@ -384,23 +373,25 @@ const Reembolso = props => {
                         <Button
                         color="primary"
                         variant="contained"
-                        onClick={e=>cadastroDespesa(reembolso)}
-                        
+                        onClick={criaCusto}
                     >
                         Criar
                     </Button>
                 )}
             </CardActions>
         </form>
+        <CustomizedSnackbars  autoHideDuration={6000} 
+                                        open={alertaAbrir} 
+                                        handleClose={handleClose} 
+                                        severity={alertaTipo} 
+                                        mensagem={alertaMensagem}/>
         </Card>
     );
     };
 
 Reembolso.propTypes = {
     className: PropTypes.string,
-    cadastroDespesa: PropTypes.func,
-    AtualizaDespesa: PropTypes.func,
-    cddespesa: PropTypes.number
+    setEnableCustos: PropTypes.func
   };
   
 export default Reembolso;

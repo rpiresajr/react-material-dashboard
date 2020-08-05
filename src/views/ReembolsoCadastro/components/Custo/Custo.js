@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Custo = props => {
-  const { className, cddespesa, ...rest } = props;
+  const { className, despesa, ...rest } = props;
 
 
 
@@ -84,14 +84,13 @@ const Custo = props => {
     console.log("buscando despesa",despesa)
     axiosInstance.get(`/api/custo/v1/${despesa}`)
     .then(response=>{
-        //console.log("OK",response.data)
+        console.log("OK",response.data)
         const lista = response.data
         setCustos(lista)
     })
     .catch(error=>{
-      console.log("Erro ao buscar o custo")
-        //console.log("ERROR",error)
-        //console.log("ERROR",error.config)
+        console.log("ERROR",error)
+        console.log("ERROR",error.config)
     })
 
   }
@@ -99,8 +98,8 @@ const Custo = props => {
 
 
   useEffect(()=>{
-      if (props.cddespesa){
-          getCustos(props.cddespesa)
+      if (props.despesa){
+          getCustos(props.despesa)
       }
   },[])
 
@@ -152,7 +151,7 @@ const Custo = props => {
 
 Custo.propTypes = {
   className: PropTypes.string,
-  cddespesa: PropTypes.number.isRequired
+  despesa: PropTypes.string.isRequired
 };
 
 export default Custo;
